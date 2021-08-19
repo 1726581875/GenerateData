@@ -1,6 +1,6 @@
-package zhangyu.fool.generate.annotation;
+package zhangyu.fool.generate.annotation.feild;
 
-import zhangyu.fool.generate.enums.RuleTypeEnum;
+import zhangyu.fool.generate.enums.IdType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,11 +13,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Number {
-
-    String value() default "";
-
-    int min() default 0;
-
-    int max() default 2147483647;
+public @interface Id {
+    IdType value() default IdType.AUTH;
 }

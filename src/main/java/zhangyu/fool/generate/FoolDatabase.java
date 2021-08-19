@@ -1,7 +1,9 @@
 package zhangyu.fool.generate;
 
-import zhangyu.fool.generate.annotation.Char;
-import zhangyu.fool.generate.annotation.Number;
+import zhangyu.fool.generate.annotation.feild.Char;
+import zhangyu.fool.generate.annotation.feild.Id;
+import zhangyu.fool.generate.annotation.feild.Ignore;
+import zhangyu.fool.generate.enums.IdType;
 
 import java.util.Date;
 
@@ -13,6 +15,7 @@ public class FoolDatabase {
     /**
      * 主键id
      */
+    @Id(IdType.AUTH)
     private Integer id;
     /**
      * 数据库名
@@ -30,6 +33,7 @@ public class FoolDatabase {
     /**
      * 创建时间
      */
+    @Ignore
     private Date createTime;
     /**
      * 修改时间

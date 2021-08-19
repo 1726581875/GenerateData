@@ -1,4 +1,4 @@
-package zhangyu.fool.generate.annotation;
+package zhangyu.fool.generate.annotation.feild;
 
 import zhangyu.fool.generate.enums.RuleTypeEnum;
 
@@ -13,23 +13,11 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Char {
+public @interface Number {
 
     String value() default "";
 
-    /**
-     * 字符长度
-     * @return
-     */
     int min() default 0;
 
-    int max() default 10;
-
-    RuleTypeEnum rule() default RuleTypeEnum.NON;
-
-    /**
-     * 配置固定值
-     * @return
-     */
-    String fixed() default "";
+    int max() default 2147483647;
 }
