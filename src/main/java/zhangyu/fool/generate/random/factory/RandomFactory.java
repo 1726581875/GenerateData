@@ -25,14 +25,16 @@ public class RandomFactory {
         Reflections reflections = new Reflections(MainRunner.class.getPackage().getName());
         Set<Class<?>> classSet = reflections.getTypesAnnotatedWith(BindType.class);
         classSet.stream().forEach(clazz -> {
+            //获取本类标注的注解
             BindType annotation = clazz.getDeclaredAnnotation(BindType.class);
-            try {
-                FoolRandom instance = (FoolRandom) clazz.newInstance();
-                MAPPING_MAP.put(annotation.value(),instance);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(annotation != null) {
+                try {
+                    FoolRandom instance = (FoolRandom) clazz.newInstance();
+                    MAPPING_MAP.put(annotation.value(), instance);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
         });
     }
 

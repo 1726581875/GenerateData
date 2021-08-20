@@ -1,0 +1,77 @@
+package zhangyu.fool.generate.random.string;
+
+import zhangyu.fool.generate.annotation.BindRole;
+import zhangyu.fool.generate.enums.RuleType;
+import zhangyu.fool.generate.reader.TextFileReader;
+import java.util.List;
+
+/**
+ * @author xiaomingzhang
+ * @date 2021/8/20
+ */
+@BindRole(RuleType.NAME)
+public class NameRandom extends StringRandom implements RuleStringRandom {
+
+    private static List<String> familyNameList = null;
+
+    private static List<String> nameList = null;
+
+    private static final String FAMILY_NAME_FILE_PATH = "src/main/resources/名.txt";
+
+    private static final String NAME_FILE_PATH = "src/main/resources/名.txt";
+
+    @Override
+    public String randomRuleString() {
+        return randomValue();
+    }
+
+    @Override
+    public String randomValue() {
+        checkAndInit();
+        String familyName = getFamilyName();
+        String name = getName();
+        return familyName + name;
+    }
+
+
+    private String getFamilyName(){
+        int index = getRandomInt(0, familyNameList.size() - 1);
+        return familyNameList.get(index);
+    }
+
+    private String getName(){
+        //名字随机一个字或者两个字
+        int nameCharNum = getRandomInt(1, 2);
+        String name = "";
+        for(int i = 0; i < nameCharNum; i++){
+            int index = getRandomInt(0, nameList.size() - 1);
+            name = name + nameList.get(index);
+        }
+        return name;
+    }
+
+    public void checkAndInit(){
+        if(familyNameList == null || nameList == null) {
+            synchronized (NameRandom.class) {
+                if(familyNameList == null || nameList == null) {
+                    initNameList();
+                }
+            }
+        }
+    }
+
+
+    public void initNameList() {
+        TextFileReader textFileReader = new TextFileReader();
+        familyNameList = textFileReader.readWord(FAMILY_NAME_FILE_PATH);
+        nameList = textFileReader.readWord(NAME_FILE_PATH);
+
+    }
+
+
+    public static void main(String[] args) {
+        NameRandom nameRandom = new NameRandom();
+        System.out.println(nameRandom.randomValue());
+    }
+
+}

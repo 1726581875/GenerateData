@@ -5,6 +5,7 @@ import zhangyu.fool.generate.annotation.feild.Id;
 import zhangyu.fool.generate.annotation.feild.Ignore;
 import zhangyu.fool.generate.annotation.feild.Number;
 import zhangyu.fool.generate.enums.IdType;
+import zhangyu.fool.generate.enums.RuleType;
 
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class FoolDatabase {
     /**
      * 数据库名
      */
-    @Char(fixed = "哈哈哈哈")
+    @Char(rule = RuleType.NAME)
     private String name;
     /**
      * 所属数据源id

@@ -1,6 +1,6 @@
 package zhangyu.fool.generate.annotation.feild;
 
-import zhangyu.fool.generate.enums.RuleTypeEnum;
+import zhangyu.fool.generate.enums.RuleType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +25,7 @@ public @interface Char {
 
     int max() default 10;
 
-    RuleTypeEnum rule() default RuleTypeEnum.NON;
+    RuleType rule() default RuleType.NON;
 
     /**
      * 配置固定值

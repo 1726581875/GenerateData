@@ -4,6 +4,7 @@ import zhangyu.fool.generate.annotation.TableName;
 import zhangyu.fool.generate.annotation.feild.Id;
 import zhangyu.fool.generate.annotation.feild.Ignore;
 import zhangyu.fool.generate.enums.IdType;
+import zhangyu.fool.generate.object.FoolDatabase;
 import zhangyu.fool.generate.random.FoolRandom;
 import zhangyu.fool.generate.random.factory.RandomFactory;
 import zhangyu.fool.generate.util.NameConvertUtil;
@@ -116,7 +117,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
                 Class<?> type = fields.get(j).getType();
                 FoolRandom random = RandomFactory.getByType(type);
                 Object value = random.randomValue(fields.get(j));
-                //转换并拼接
+                //转换并拼接值
                 values.append(convertValue(value));
                 if (j != fields.size() - 1) {
                     values.append(",");
@@ -143,6 +144,12 @@ public class MySqlSqlBuilder implements SqlBuilder {
             str = String.valueOf(value);
         }
         return str;
+    }
+
+    public static void main(String[] args) {
+        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
+        String sql = mySqlSqlBuilder.buildInsertSql(FoolDatabase.class,100);
+        System.out.println(sql);
     }
 
 }

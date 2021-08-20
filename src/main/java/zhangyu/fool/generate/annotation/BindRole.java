@@ -1,4 +1,6 @@
-package zhangyu.fool.generate.annotation.feild;
+package zhangyu.fool.generate.annotation;
+
+import zhangyu.fool.generate.enums.RuleType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,15 +9,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author xiamingzhang
- * @data 2021/08/19
+ * @data 2021/08/20
+ * 标注random类对应的规则
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Number {
-
-    String value() default "";
-
-    int min() default 0;
-
-    int max() default 2147483647;
+public @interface BindRole {
+    RuleType value();
 }

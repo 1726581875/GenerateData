@@ -6,5 +6,4 @@ package zhangyu.fool.generate.enums;
  */
 public enum IdType {
     AUTH
-    ;
 }
