@@ -8,9 +8,10 @@ public interface SqlBuilder {
 
     /**
      * 构建插入语句
-     * @param entityClass
+     * @param entityClass 对应实体类class
+     * @param rowNum 行数
      * @return
      */
-    String buildInsertSql(Class<?> entityClass);
+    String buildInsertSql(Class<?> entityClass, int rowNum);
 
 }

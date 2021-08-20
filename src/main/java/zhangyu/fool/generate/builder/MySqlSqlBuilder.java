@@ -1,6 +1,6 @@
 package zhangyu.fool.generate.builder;
 
-import zhangyu.fool.generate.FoolDatabase;
+import zhangyu.fool.generate.annotation.TableName;
 import zhangyu.fool.generate.annotation.feild.Id;
 import zhangyu.fool.generate.annotation.feild.Ignore;
 import zhangyu.fool.generate.enums.IdType;
@@ -23,23 +23,38 @@ public class MySqlSqlBuilder implements SqlBuilder {
 
     private static final String INSERT_TEMPLATE = "insert into `%s`(%s) \n values %s";
 
+    /**
+     * mysql一次性插入数据受MySQL max_allowed_packet参数限制，为了不超过其阈值，设置最大批量大小
+     */
+    private static final int BATCH_NUM = 10000;
+
     @Override
-    public String buildInsertSql(Class<?> entityClass) {
+    public String buildInsertSql(Class<?> entityClass, int rowNum) {
+
+        if(rowNum > BATCH_NUM) {
+            rowNum = BATCH_NUM;
+        }
 
         String tableName = this.getTableNameSegment(entityClass);
 
         //获取列
         List<Field> fieldList = getNotIgnoreField(entityClass);
 
-        String fieldNames = this.getFieldSegment(fieldList);
+        String fieldNames = this.getFieldSqlSegment(fieldList);
 
-        String values = this.getValueSegment(fieldList, 10);
+        String values = this.getValueSqlSegment(fieldList, rowNum);
 
         return String.format(INSERT_TEMPLATE, tableName, fieldNames, values);
     }
 
 
     private String getTableNameSegment(Class<?> entityClass) {
+        if(entityClass.getAnnotation(TableName.class) != null) {
+            TableName annotation = entityClass.getAnnotation(TableName.class);
+            if(!"".equals(annotation.value().trim())){
+                return annotation.value().trim();
+            }
+        }
         return NameConvertUtil.convertToDataBaseRule(entityClass.getSimpleName());
     }
 
@@ -71,7 +86,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
      * @param fields
      * @return
      */
-    private String getFieldSegment(List<Field> fields) {
+    private String getFieldSqlSegment(List<Field> fields) {
 
         StringBuilder fieldStr = new StringBuilder();
         for (int i = 0; i < fields.size(); i++) {
@@ -92,7 +107,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
      * @param limit  条数限制
      * @return
      */
-    private String getValueSegment(List<Field> fields, int limit) {
+    private String getValueSqlSegment(List<Field> fields, int limit) {
         StringBuilder values = new StringBuilder();
         for (int i = 0; i < limit; i++) {
             values.append("(");
@@ -129,12 +144,5 @@ public class MySqlSqlBuilder implements SqlBuilder {
         }
         return str;
     }
-
-    public static void main(String[] args) {
-        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
-        String sql = mySqlSqlBuilder.buildInsertSql(FoolDatabase.class);
-        System.out.println(sql);
-    }
-
 
 }

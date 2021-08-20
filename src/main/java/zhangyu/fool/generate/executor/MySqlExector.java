@@ -16,6 +16,7 @@ public class MySqlExector implements SqlExecutor {
              Statement statement = connection.createStatement()) {
                 statement.execute(sql);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("execute sql execute", e);
         }
     }

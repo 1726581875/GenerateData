@@ -39,6 +39,12 @@
             <version>0.9.11</version>
         </dependency>
 
+        <!-- mysql驱动 连接数据库 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.21</version>
+        </dependency>
 
     </dependencies>
 
