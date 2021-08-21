@@ -12,13 +12,6 @@ import java.lang.reflect.Field;
 public class LongRandom extends NumberRandom {
     @Override
     public Long randomValue(Field field) {
-        if(field != null) {
-            Number number = field.getAnnotation(Number.class);
-            if (number != null) {
-                //todo 更改为生成范围内的值
-                return  random.nextLong();
-            }
-        }
         return random.nextLong();
     }
 }

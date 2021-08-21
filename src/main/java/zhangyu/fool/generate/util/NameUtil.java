@@ -4,7 +4,7 @@ package zhangyu.fool.generate.util;
  * @author xiaomingzhang
  * @date 2021/8/19
  */
-public class NameConvertUtil {
+public class NameUtil {
 
     /**
      * CourseRecord -> course_record
@@ -33,6 +33,11 @@ public class NameConvertUtil {
 
         return name.toString();
     }
+
+    public static String around(String str, char c){
+        return c + str + c;
+    }
+
 
 
 }

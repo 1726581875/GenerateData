@@ -1,14 +1,14 @@
-package zhangyu.fool.generate;
+package zhangyu.fool.generate.util;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import zhangyu.fool.generate.util.NameConvertUtil;
+import zhangyu.fool.generate.util.NameUtil;
 
 /**
  * @author xiaomingzhang
  * @date 2021/8/19
  */
-public class NameConvertUtilTest {
+public class NameUtilTest {
 
 
     /**
@@ -24,7 +24,7 @@ public class NameConvertUtilTest {
     }
 
     private void assertEquals(String originalStr, String expectStr){
-        String resultStr1 = NameConvertUtil.convertToDataBaseRule(originalStr);
+        String resultStr1 = NameUtil.convertToDataBaseRule(originalStr);
         Assertions.assertEquals(expectStr,resultStr1,"转换结果与期望结果不相等");
     }
 

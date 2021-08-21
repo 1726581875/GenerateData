@@ -13,11 +13,9 @@ public class IntegerRandom extends NumberRandom {
 
     @Override
     public Integer randomValue(Field field) {
-        if(field != null) {
+        if(isExistAnnotation(field,Number.class)) {
             Number number = field.getAnnotation(Number.class);
-            if (number != null) {
-                return random.nextInt(number.max() - number.min() + 1) + number.min();
-            }
+            return getRandomInt(number.min(), number.max());
         }
         return random.nextInt(Integer.MAX_VALUE);
     }

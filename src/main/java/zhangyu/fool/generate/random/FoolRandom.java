@@ -20,4 +20,11 @@ public interface FoolRandom {
      * @return
      */
     Object randomValue();
+
+    /**
+     * 获取转换String类型的随机值
+     * @param field
+     * @return
+     */
+    String randomValueAndToString(Field field);
 }

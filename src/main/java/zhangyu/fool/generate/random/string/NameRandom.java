@@ -3,6 +3,7 @@ package zhangyu.fool.generate.random.string;
 import zhangyu.fool.generate.annotation.BindRole;
 import zhangyu.fool.generate.enums.RuleType;
 import zhangyu.fool.generate.reader.TextFileReader;
+
 import java.util.List;
 
 /**
@@ -34,44 +35,42 @@ public class NameRandom extends StringRandom implements RuleStringRandom {
     }
 
 
-    private String getFamilyName(){
+    private String getFamilyName() {
         int index = getRandomInt(0, familyNameList.size() - 1);
         return familyNameList.get(index);
     }
 
-    private String getName(){
+    private String getName() {
         //名字随机一个字或者两个字
         int nameCharNum = getRandomInt(1, 2);
         String name = "";
-        for(int i = 0; i < nameCharNum; i++){
+        for (int i = 0; i < nameCharNum; i++) {
             int index = getRandomInt(0, nameList.size() - 1);
-            name = name + nameList.get(index);
+            name += nameList.get(index);
         }
         return name;
     }
 
-    public void checkAndInit(){
-        if(familyNameList == null || nameList == null) {
+    public void checkAndInit() {
+        //double check
+        if (isNotInit()) {
             synchronized (NameRandom.class) {
-                if(familyNameList == null || nameList == null) {
+                if (isNotInit()) {
                     initNameList();
                 }
             }
         }
     }
 
-
-    public void initNameList() {
-        TextFileReader textFileReader = new TextFileReader();
-        familyNameList = textFileReader.readWord(FAMILY_NAME_FILE_PATH);
-        nameList = textFileReader.readWord(NAME_FILE_PATH);
-
+    private boolean isNotInit(){
+        return (familyNameList == null || nameList == null);
     }
 
 
-    public static void main(String[] args) {
-        NameRandom nameRandom = new NameRandom();
-        System.out.println(nameRandom.randomValue());
+    private void initNameList() {
+        TextFileReader textFileReader = new TextFileReader();
+        familyNameList = textFileReader.readWord(FAMILY_NAME_FILE_PATH);
+        nameList = textFileReader.readWord(NAME_FILE_PATH);
     }
 
 }

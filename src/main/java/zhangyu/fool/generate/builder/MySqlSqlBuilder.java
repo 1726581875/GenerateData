@@ -7,7 +7,7 @@ import zhangyu.fool.generate.enums.IdType;
 import zhangyu.fool.generate.object.FoolDatabase;
 import zhangyu.fool.generate.random.FoolRandom;
 import zhangyu.fool.generate.random.factory.RandomFactory;
-import zhangyu.fool.generate.util.NameConvertUtil;
+import zhangyu.fool.generate.util.NameUtil;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -56,7 +56,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
                 return annotation.value().trim();
             }
         }
-        return NameConvertUtil.convertToDataBaseRule(entityClass.getSimpleName());
+        return NameUtil.convertToDataBaseRule(entityClass.getSimpleName());
     }
 
     private List<Field> getNotIgnoreField(Class<?> entityClass) {
@@ -91,7 +91,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
 
         StringBuilder fieldStr = new StringBuilder();
         for (int i = 0; i < fields.size(); i++) {
-            String fieldName = NameConvertUtil.convertToDataBaseRule(fields.get(i).getName());
+            String fieldName = NameUtil.convertToDataBaseRule(fields.get(i).getName());
             fieldStr.append("`" + fieldName + "`");
             if (i != fields.size() - 1) {
                 fieldStr.append(",");

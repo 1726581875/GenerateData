@@ -12,7 +12,7 @@ import java.util.Date;
  * @date 2021/8/19
  */
 @BindType(Date.class)
-public class DateRandom implements FoolRandom {
+public class DateRandom extends AbstractRandom {
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
