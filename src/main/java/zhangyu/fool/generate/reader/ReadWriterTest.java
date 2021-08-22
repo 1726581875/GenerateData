@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 public class ReadWriterTest {
 
     public static void main(String[] args) {
-        String filePath = "C:\\Users\\admin\\Desktop\\百家姓\\名.txt";
-        String destPath = "C:\\Users\\admin\\Desktop\\百家姓\\bbb.txt";
+        String filePath = "C:\\Users\\asus\\Desktop\\test\\新建文本文档.txt";
+        String destPath = "C:\\Users\\asus\\Desktop\\test\\school.txt";
         try(FileInputStream fileInputStream = new FileInputStream(filePath);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -22,7 +22,7 @@ public class ReadWriterTest {
 
             List<String> strList = new ArrayList<>(16);
             lines.forEach(line -> {
-                    String[] split = line.split("、");
+                    String[] split = line.split("\t");
                     for (String str : split){
                         if(!"".equals(str.trim())){
                             strList.add(str.trim());
@@ -31,7 +31,7 @@ public class ReadWriterTest {
             });
             for (int i = 0; i < strList.size(); i++){
                 String str = strList.get(i) + ",";
-                if(i % 10 == 0 && i != 0){
+                if(i % 5 == 0 && i != 0){
                     str = str + "\n";
                 }
                 bufferedWriter.write(str);

@@ -22,7 +22,7 @@ public class FoolDatabase {
     /**
      * 数据库名
      */
-    @Char(rule = RuleType.NAME)
+    @Char(rule = RuleType.SCHOOL)
     private String name;
     /**
      * 所属数据源id

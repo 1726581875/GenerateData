@@ -92,7 +92,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
         StringBuilder fieldStr = new StringBuilder();
         for (int i = 0; i < fields.size(); i++) {
             String fieldName = NameUtil.convertToDataBaseRule(fields.get(i).getName());
-            fieldStr.append("`" + fieldName + "`");
+            fieldStr.append(NameUtil.around(fieldName,"`"));
             if (i != fields.size() - 1) {
                 fieldStr.append(",");
             }
@@ -136,10 +136,10 @@ public class MySqlSqlBuilder implements SqlBuilder {
     private String convertValue(Object value) {
         String str = "";
         if (value instanceof String) {
-            str = "'" + value + "'";
+            str = NameUtil.around((String) value, "'");
         } else if (value instanceof Date) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            str = "'" + dateFormat.format(value) + "'";
+            str = NameUtil.around(dateFormat.format(value), "'");
         } else {
             str = String.valueOf(value);
         }

@@ -2,6 +2,7 @@ package zhangyu.fool.generate.enums;
 
 import zhangyu.fool.generate.random.string.NameRandom;
 import zhangyu.fool.generate.random.string.RuleStringRandom;
+import zhangyu.fool.generate.random.string.SchoolRandom;
 
 /**
  * @author xiaomingzhang
@@ -16,7 +17,11 @@ public enum RuleType {
     /**
      * 姓名
      */
-    NAME(NameRandom.class)
+    NAME(NameRandom.class),
+    /**
+     * 学校
+     */
+    SCHOOL(SchoolRandom.class)
     ;
     private Class<?> clazz;
 

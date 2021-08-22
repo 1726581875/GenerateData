@@ -17,7 +17,7 @@ public class NameRandom extends StringRandom implements RuleStringRandom {
 
     private static List<String> nameList = null;
 
-    private static final String FAMILY_NAME_FILE_PATH = "src/main/resources/名.txt";
+    private static final String FAMILY_NAME_FILE_PATH = "src/main/resources/姓.txt";
 
     private static final String NAME_FILE_PATH = "src/main/resources/名.txt";
 

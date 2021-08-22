@@ -34,7 +34,7 @@ public class NameUtil {
         return name.toString();
     }
 
-    public static String around(String str, char c){
+    public static String around(String str, String c){
         return c + str + c;
     }
 
