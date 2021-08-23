@@ -1,6 +1,6 @@
 package zhangyu.fool.generate.executor;
 
-import zhangyu.fool.generate.util.DatabaseUtil;
+import zhangyu.fool.generate.util.ConnectUtil;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -12,7 +12,7 @@ public class MySqlExector implements SqlExecutor {
 
     @Override
     public void execute(String sql) {
-        try (Connection connection = DatabaseUtil.getConnection();
+        try (Connection connection = ConnectUtil.getConnection();
              Statement statement = connection.createStatement()) {
                 statement.execute(sql);
         } catch (Exception e) {

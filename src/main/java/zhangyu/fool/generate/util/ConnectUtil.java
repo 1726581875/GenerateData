@@ -7,7 +7,7 @@ import java.sql.DriverManager;
  * 2020年9月12日
  * 数据库连接工具
  */
-public class DatabaseUtil {
+public class ConnectUtil {
     /**
      * 获取数据库连接
      *
