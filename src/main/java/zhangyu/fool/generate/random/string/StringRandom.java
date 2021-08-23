@@ -6,7 +6,6 @@ import zhangyu.fool.generate.enums.RuleType;
 import zhangyu.fool.generate.random.AbstractRandom;
 
 import java.lang.reflect.Field;
-import java.util.Random;
 
 /**
  * @author xiaomingzhang

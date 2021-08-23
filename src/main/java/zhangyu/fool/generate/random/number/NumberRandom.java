@@ -1,7 +1,6 @@
 package zhangyu.fool.generate.random.number;
 
 import zhangyu.fool.generate.random.AbstractRandom;
-import zhangyu.fool.generate.random.FoolRandom;
 
 import java.util.Random;
 

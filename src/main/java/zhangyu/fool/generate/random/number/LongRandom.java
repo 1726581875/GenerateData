@@ -1,7 +1,6 @@
 package zhangyu.fool.generate.random.number;
 
 import zhangyu.fool.generate.annotation.BindType;
-import zhangyu.fool.generate.annotation.feild.Number;
 import java.lang.reflect.Field;
 
 /**
