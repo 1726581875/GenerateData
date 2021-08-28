@@ -11,7 +11,7 @@ public class MainRunner {
 
     public static void main(String[] args) {
         MySqlRunner mySqlRunner = new MySqlRunner();
-        mySqlRunner.run(FoolDatabase.class, 100001);
+        mySqlRunner.run(FoolDatabase.class, 9000001);
     }
 
 }

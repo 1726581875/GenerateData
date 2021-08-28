@@ -21,6 +21,8 @@ public class NameRandom extends StringRandom implements RuleStringRandom {
 
     private static final String NAME_FILE_PATH = "src/main/resources/名.txt";
 
+    private boolean useFaker = true;
+
     @Override
     public String randomRuleString() {
         return randomValue();
@@ -28,6 +30,11 @@ public class NameRandom extends StringRandom implements RuleStringRandom {
 
     @Override
     public String randomValue() {
+        //使用faker生成人名
+        if(useFaker){
+          return FAKER.name().fullName();
+        }
+        //自己生成名字
         checkAndInit();
         String familyName = getFamilyName();
         String name = getName();

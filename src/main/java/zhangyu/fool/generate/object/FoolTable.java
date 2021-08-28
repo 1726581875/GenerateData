@@ -1,8 +1,7 @@
 package zhangyu.fool.generate.object;
-
 import zhangyu.fool.generate.annotation.feild.Char;
 import zhangyu.fool.generate.annotation.feild.Id;
-import zhangyu.fool.generate.annotation.feild.Ignore;
+import zhangyu.fool.generate.annotation.feild.Join;
 import zhangyu.fool.generate.annotation.feild.Number;
 import zhangyu.fool.generate.enums.IdType;
 import zhangyu.fool.generate.enums.RuleType;
@@ -11,37 +10,28 @@ import java.util.Date;
 
 /**
  * @author xmz
- * @date: 2021/07/17
+ * @date: 2021/08/24
  */
-public class FoolDatabase {
+public class FoolTable{
     /**
-     * 主键id
+     * ??id
      */
     @Id(IdType.AUTH)
-    private Integer id;
+    private Long id;
     /**
-     * 数据库名
+     * 名字
      */
     @Char(rule = RuleType.NAME)
     private String name;
+
+    @Join(object = FoolDatabase.class, field = "id")
+    private Long databaseId;
     /**
-     * 所属数据源id
+     * 表描述
      */
-    private Integer sourceId;
-    /**
-     * 状态|1正常、2已删除
-     */
+    @Char(rule = RuleType.SCHOOL)
+    private String tableComment;
+
     @Number(min = 0,max = 1)
     private Integer status;
-    /**
-     * 创建时间
-     */
-    @Ignore
-    private Date createTime;
-    /**
-     * 修改时间
-     */
-    @Ignore
-    private Date updateTime;
-
 }

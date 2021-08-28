@@ -6,11 +6,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author xiamingzhang
- * @data 2021/08/19
+ * @author xiaomingzhang
+ * @date 2021/08/27
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Ignore {
+public @interface Join {
+    /**
+     * 关联对象
+     * @return
+     */
+    Class<?> object();
 
+    /**
+     * 关联列名
+     * @return
+     */
+    String field();
 }

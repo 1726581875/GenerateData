@@ -1,7 +1,10 @@
 package zhangyu.fool.generate.random;
 
+import com.github.javafaker.Faker;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -11,6 +14,8 @@ import java.util.Random;
 public abstract class AbstractRandom implements FoolRandom {
 
     protected static final Random random = new Random();
+
+    protected Faker FAKER = new Faker(Locale.CHINA);
 
     protected int getRandomInt(int min, int max){
         return random.nextInt(max - min + 1) + min;

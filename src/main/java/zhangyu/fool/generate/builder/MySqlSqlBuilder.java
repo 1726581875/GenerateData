@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,8 @@ import java.util.List;
 public class MySqlSqlBuilder implements SqlBuilder {
 
     private static final String INSERT_TEMPLATE = "insert into `%s`(%s) \n values %s";
+
+    private static final String SELECT_TEMPLATE = "select %s from `%s` limit %s,%s";
 
     /**
      * mysql一次性插入数据受MySQL max_allowed_packet参数限制，为了不超过其阈值，设置最大批量大小
@@ -47,6 +50,24 @@ public class MySqlSqlBuilder implements SqlBuilder {
 
         return String.format(INSERT_TEMPLATE, tableName, fieldNames, values);
     }
+
+
+    @Override
+    public String buildSelectSql(Class<?> entityClass, String fieldName, int offset, int limit) {
+
+        String tableNameSeg = this.getTableNameSegment(entityClass);
+        Field field = null;
+        try {
+            field =  entityClass.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+
+        String fieldNameSeg = this.getFieldSqlSegment(Arrays.asList(field));
+
+        return String.format(SELECT_TEMPLATE, fieldNameSeg, tableNameSeg, offset, limit);
+    }
+
 
 
     private String getTableNameSegment(Class<?> entityClass) {
@@ -147,8 +168,11 @@ public class MySqlSqlBuilder implements SqlBuilder {
     }
 
     public static void main(String[] args) {
-        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
+/*        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
         String sql = mySqlSqlBuilder.buildInsertSql(FoolDatabase.class,100);
+        System.out.println(sql);*/
+        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
+        String sql = mySqlSqlBuilder.buildSelectSql(FoolDatabase.class, "id", 0, 1000);
         System.out.println(sql);
     }
 
