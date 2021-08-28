@@ -26,4 +26,7 @@ public interface SqlBuilder {
      */
     String buildSelectSql(Class<?> entityClass, String fieldName, int offset, int limit);
 
+
+    String buildSelectMaxIdSql(Class<?> entityClass, String fieldName);
+
 }

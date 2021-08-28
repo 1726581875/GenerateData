@@ -23,4 +23,14 @@ public @interface Join {
      * @return
      */
     String field();
+
+    /**
+     * 关联关系
+     * 1:一对一
+     * 2：一对二
+     * 3：一对三
+     * ...
+     * @return
+     */
+    int rel() default 1;
 }

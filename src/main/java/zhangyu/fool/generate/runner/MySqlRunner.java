@@ -2,9 +2,13 @@ package zhangyu.fool.generate.runner;
 
 import zhangyu.fool.generate.annotation.feild.Join;
 import zhangyu.fool.generate.builder.MySqlSqlBuilder;
-import zhangyu.fool.generate.executor.MySqlExector;
+import zhangyu.fool.generate.builder.SqlBuilder;
+import zhangyu.fool.generate.executor.MySqlExecutor;
+import zhangyu.fool.generate.executor.SqlExecutor;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +17,16 @@ import java.util.Objects;
  * @date 2021/8/23
  */
 public class MySqlRunner {
+
+    private SqlBuilder sqlBuilder;
+
+    private SqlExecutor sqlExecutor;
+
+    public MySqlRunner(){
+        sqlBuilder = new MySqlSqlBuilder();
+        sqlExecutor = new MySqlExecutor();
+    }
+
 
     public void run(Class<?> entityClass, int rowNum){
         int pageSize = 10000;
@@ -29,31 +43,81 @@ public class MySqlRunner {
 
             //执行SQL
             long exeTime = System.currentTimeMillis();
-            MySqlExector mySqlExector = new MySqlExector();
+            MySqlExecutor mySqlExector = new MySqlExecutor();
             mySqlExector.execute(sql);
             System.out.println("第" + i + "页,数量= " + limit + ",执行SQL耗时=" + (System.currentTimeMillis() - exeTime) + "ms");
         }
         System.out.println("总耗时=" + (System.currentTimeMillis() - beginTime) + "ms");
     }
 
-    private void doHandler(Class<?> entityClass, List<Join> joinList) {
-        Field[] fields = entityClass.getFields();
+
+
+
+
+    public static void main(String[] args) {
+
+    }
+
+    private void toRun(Class<?> entityClass, int rowNum){
+        // init joinNodeList
+        List<JoinTreeNode> joinNodeList = new ArrayList<>();
+        JoinTreeNode parentNode = new JoinTreeNode(entityClass,null, 1, rowNum,null);
+        joinNodeList.add(parentNode);
+        doAnalyzeNodeTree(entityClass, parentNode, joinNodeList);
+
+        // handler
+        Collections.reverse(joinNodeList);
+        for (JoinTreeNode joinTreeNode : joinNodeList){
+            handleNode(joinTreeNode);
+        }
+    }
+
+    void handleNode(JoinTreeNode node) {
+        //主对象
+        if(node.getJoinField() == null){
+
+        }
+        Class<?> type = getFieldType(node.getObjectClass(), node.getJoinField());
+        if(Integer.class.equals(type) || Long.class.equals(type)){
+            String selectSql = sqlBuilder.buildSelectMaxIdSql(node.getObjectClass(), node.getJoinField());
+            Object result = sqlExecutor.execute(selectSql, type);
+            Long maxId = result == null ? 0L : Long.valueOf(result.toString());
+            //todo 待完善
+
+        }else if(String.class.equals(type)){
+
+        } else {
+            throw new UnsupportedOperationException("不支持["+ type.getName() +"]类型的关联字段");
+        }
+    }
+
+    private Class<?> getFieldType(Class<?> clazz, String fieldName){
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+
+
+
+    private void doAnalyzeNodeTree(Class<?> entityClass, JoinTreeNode parentNode, List<JoinTreeNode> joinList) {
+        Field[] fields = entityClass.getDeclaredFields();
         for (Field field : fields){
             Join join = field.getAnnotation(Join.class);
             if(Objects.nonNull(join)) {
-                joinList.add(join);
-                Class<?> object = join.object();
-                String joinField = join.field();
-                //先构造关联对象的insert sql 并插入
-
-                //查询获取关联对象的关联字段List
-
-                //根据 关联字段 拼接当前对象sql并插入
-                this.doHandler(object, joinList);
+                JoinTreeNode joinTreeNode = new JoinTreeNode(join.object(), join.field(), join.rel()
+                        , join.rel() * parentNode.getRow(), parentNode);
+                joinList.add(joinTreeNode);
+                // 递归解析
+                doAnalyzeNodeTree(join.object(), joinTreeNode, joinList);
             }
         }
-
     }
+
+
 
 
 

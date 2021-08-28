@@ -12,4 +12,6 @@ public interface SqlExecutor {
      */
     void execute(String sql);
 
+    Object execute(String sql, Class<?> type);
+
 }

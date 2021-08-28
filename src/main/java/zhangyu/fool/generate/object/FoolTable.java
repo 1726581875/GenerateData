@@ -24,7 +24,7 @@ public class FoolTable{
     @Char(rule = RuleType.NAME)
     private String name;
 
-    @Join(object = FoolDatabase.class, field = "id")
+    @Join(object = FoolDatabase.class, field = "id", rel = 2)
     private Long databaseId;
     /**
      * 表描述

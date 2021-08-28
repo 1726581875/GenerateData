@@ -25,7 +25,9 @@ public class MySqlSqlBuilder implements SqlBuilder {
 
     private static final String INSERT_TEMPLATE = "insert into `%s`(%s) \n values %s";
 
-    private static final String SELECT_TEMPLATE = "select %s from `%s` limit %s,%s";
+    private static final String SELECT_FIELD_TEMPLATE = "select %s from `%s` limit %s,%s";
+
+    private static final String SELECT_MAX_ID_TEMPLATE = "select max(%s) from `%s`";
 
     /**
      * mysql一次性插入数据受MySQL max_allowed_packet参数限制，为了不超过其阈值，设置最大批量大小
@@ -56,18 +58,31 @@ public class MySqlSqlBuilder implements SqlBuilder {
     public String buildSelectSql(Class<?> entityClass, String fieldName, int offset, int limit) {
 
         String tableNameSeg = this.getTableNameSegment(entityClass);
+
+        String fieldNameSeg = getFieldSqlSegment(entityClass, fieldName);
+
+        return String.format(SELECT_FIELD_TEMPLATE, fieldNameSeg, tableNameSeg, offset, limit);
+    }
+
+    @Override
+    public String buildSelectMaxIdSql(Class<?> entityClass, String fieldName) {
+
+        String tableNameSeg = this.getTableNameSegment(entityClass);
+
+        String fieldNameSeg = getFieldSqlSegment(entityClass, fieldName);
+
+        return String.format(SELECT_MAX_ID_TEMPLATE, fieldNameSeg, tableNameSeg);
+    }
+
+    private String getFieldSqlSegment(Class<?> entityClass, String fieldName){
         Field field = null;
         try {
             field =  entityClass.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
-
-        String fieldNameSeg = this.getFieldSqlSegment(Arrays.asList(field));
-
-        return String.format(SELECT_TEMPLATE, fieldNameSeg, tableNameSeg, offset, limit);
+        return this.getFieldSqlSegment(Arrays.asList(field));
     }
-
 
 
     private String getTableNameSegment(Class<?> entityClass) {
