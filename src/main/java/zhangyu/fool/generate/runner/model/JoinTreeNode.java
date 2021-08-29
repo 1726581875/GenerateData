@@ -1,4 +1,6 @@
-package zhangyu.fool.generate.runner;
+package zhangyu.fool.generate.runner.model;
+
+import java.util.List;
 
 /**
  * @author xmz
@@ -7,21 +9,26 @@ package zhangyu.fool.generate.runner;
 public class JoinTreeNode {
 
     private Class<?> objectClass;
-
+    /**
+     * @see @Join 注解里的field属性列
+     */
     private String joinField;
+    /**
+     * 绑定列，标记@Join注解所在列名
+     */
+    private String bindField;
 
     private int rel;
 
     private int row;
 
-    private JoinTreeNode parentNode;
+    private List<JoinTreeNode> childrenNode;
 
-    public JoinTreeNode(Class<?> objectClass, String joinField, int rel, int row, JoinTreeNode parentNode) {
+    public JoinTreeNode(Class<?> objectClass, String joinField, int rel, int row) {
         this.objectClass = objectClass;
         this.joinField = joinField;
         this.rel = rel;
         this.row = row;
-        this.parentNode = parentNode;
     }
 
     public Class<?> getObjectClass() {
@@ -56,22 +63,31 @@ public class JoinTreeNode {
         this.row = row;
     }
 
-    public JoinTreeNode getParentNode() {
-        return parentNode;
+    public List<JoinTreeNode> getChildrenNode() {
+        return childrenNode;
     }
 
-    public void setParentNode(JoinTreeNode parentNode) {
-        this.parentNode = parentNode;
+    public void setChildrenNode(List<JoinTreeNode> childrenNode) {
+        this.childrenNode = childrenNode;
+    }
+
+    public String getBindField() {
+        return bindField;
+    }
+
+    public void setBindField(String bindField) {
+        this.bindField = bindField;
     }
 
     @Override
     public String toString() {
         return "JoinTreeNode{" +
-                "object=" + objectClass +
+                "objectClass=" + objectClass +
                 ", joinField='" + joinField + '\'' +
+                ", bindField='" + bindField + '\'' +
                 ", rel=" + rel +
                 ", row=" + row +
-                ", parentNode=" + parentNode +
+                ", childrenNode=" + childrenNode +
                 '}';
     }
 }

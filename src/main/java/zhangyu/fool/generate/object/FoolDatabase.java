@@ -1,8 +1,6 @@
 package zhangyu.fool.generate.object;
 
-import zhangyu.fool.generate.annotation.feild.Char;
-import zhangyu.fool.generate.annotation.feild.Id;
-import zhangyu.fool.generate.annotation.feild.Ignore;
+import zhangyu.fool.generate.annotation.feild.*;
 import zhangyu.fool.generate.annotation.feild.Number;
 import zhangyu.fool.generate.enums.IdType;
 import zhangyu.fool.generate.enums.RuleType;
@@ -27,6 +25,7 @@ public class FoolDatabase {
     /**
      * 所属数据源id
      */
+    @Join(object = FoolDataSource.class, field = "id")
     private Integer sourceId;
     /**
      * 状态|1正常、2已删除

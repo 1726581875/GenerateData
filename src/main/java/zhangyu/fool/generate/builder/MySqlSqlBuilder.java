@@ -3,8 +3,8 @@ package zhangyu.fool.generate.builder;
 import zhangyu.fool.generate.annotation.TableName;
 import zhangyu.fool.generate.annotation.feild.Id;
 import zhangyu.fool.generate.annotation.feild.Ignore;
+import zhangyu.fool.generate.builder.model.AutoFieldRule;
 import zhangyu.fool.generate.enums.IdType;
-import zhangyu.fool.generate.object.FoolDatabase;
 import zhangyu.fool.generate.random.FoolRandom;
 import zhangyu.fool.generate.random.factory.RandomFactory;
 import zhangyu.fool.generate.util.NameUtil;
@@ -12,10 +12,9 @@ import zhangyu.fool.generate.util.NameUtil;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaomingzhang
@@ -36,19 +35,28 @@ public class MySqlSqlBuilder implements SqlBuilder {
 
     @Override
     public String buildInsertSql(Class<?> entityClass, int rowNum) {
+        return toBuildInsertSql(entityClass, null, rowNum);
+    }
 
-        if(rowNum > BATCH_NUM) {
-            rowNum = BATCH_NUM;
+    @Override
+    public String buildInsertSql(Class<?> entityClass, List<AutoFieldRule> ruleList, int rowNum) {
+        return toBuildInsertSql(entityClass, ruleList, rowNum);
+    }
+
+    private String toBuildInsertSql(Class<?> entityClass, List<AutoFieldRule> ruleList, int limit) {
+
+        if (limit > BATCH_NUM) {
+            limit = BATCH_NUM;
         }
 
         String tableName = this.getTableNameSegment(entityClass);
 
         //获取列
-        List<Field> fieldList = getNotIgnoreField(entityClass);
+        List<Field> fieldList = getNotIgnoreField(entityClass, ruleList);
 
         String fieldNames = this.getFieldSqlSegment(fieldList);
 
-        String values = this.getValueSqlSegment(fieldList, rowNum);
+        String values = this.getValueSqlSegment(fieldList, ruleList, limit);
 
         return String.format(INSERT_TEMPLATE, tableName, fieldNames, values);
     }
@@ -74,10 +82,10 @@ public class MySqlSqlBuilder implements SqlBuilder {
         return String.format(SELECT_MAX_ID_TEMPLATE, fieldNameSeg, tableNameSeg);
     }
 
-    private String getFieldSqlSegment(Class<?> entityClass, String fieldName){
+    private String getFieldSqlSegment(Class<?> entityClass, String fieldName) {
         Field field = null;
         try {
-            field =  entityClass.getDeclaredField(fieldName);
+            field = entityClass.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -86,16 +94,16 @@ public class MySqlSqlBuilder implements SqlBuilder {
 
 
     private String getTableNameSegment(Class<?> entityClass) {
-        if(entityClass.getAnnotation(TableName.class) != null) {
+        if (entityClass.getAnnotation(TableName.class) != null) {
             TableName annotation = entityClass.getAnnotation(TableName.class);
-            if(!"".equals(annotation.value().trim())){
+            if (!"".equals(annotation.value().trim())) {
                 return annotation.value().trim();
             }
         }
         return NameUtil.convertToDataBaseRule(entityClass.getSimpleName());
     }
 
-    private List<Field> getNotIgnoreField(Class<?> entityClass) {
+    private List<Field> getNotIgnoreField(Class<?> entityClass, List<AutoFieldRule> ruleList) {
         Field[] fields = entityClass.getDeclaredFields();
         List<Field> fieldList = new ArrayList<>(fields.length);
         for (Field field : fields) {
@@ -103,11 +111,17 @@ public class MySqlSqlBuilder implements SqlBuilder {
             if (field.getAnnotation(Ignore.class) != null) {
                 continue;
             }
-            //过滤掉id自增列
             if (field.getAnnotation(Id.class) != null) {
                 Id annotation = field.getAnnotation(Id.class);
+                //主键是否交由数据库生成
                 if (IdType.AUTH.equals(annotation.value())) {
-                    continue;
+                    if((ruleList == null || ruleList.size() == 0)){
+                        continue;
+                    }
+                    Set<String> fieldSet = ruleList.stream().map(AutoFieldRule::getName).collect(Collectors.toSet());
+                    if(!fieldSet.contains(field.getName())){
+                        continue;
+                    }
                 }
             }
             fieldList.add(field);
@@ -128,7 +142,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
         StringBuilder fieldStr = new StringBuilder();
         for (int i = 0; i < fields.size(); i++) {
             String fieldName = NameUtil.convertToDataBaseRule(fields.get(i).getName());
-            fieldStr.append(NameUtil.around(fieldName,"`"));
+            fieldStr.append(NameUtil.around(fieldName, "`"));
             if (i != fields.size() - 1) {
                 fieldStr.append(",");
             }
@@ -144,15 +158,44 @@ public class MySqlSqlBuilder implements SqlBuilder {
      * @param limit  条数限制
      * @return
      */
-    private String getValueSqlSegment(List<Field> fields, int limit) {
+    private String getValueSqlSegment(List<Field> fields, List<AutoFieldRule> relationFieldList, int limit) {
+
+        Map<String, AutoFieldRule> fieldRuleMap = new HashMap<>(16);
+
+        Map<String, Long> relationIdMap = new HashMap<>(16);
+
+        if (relationFieldList != null) {
+            Map<String, AutoFieldRule> map = relationFieldList.stream().collect(Collectors.toMap(AutoFieldRule::getName,
+                    Function.identity(), (a, b) -> a));
+            fieldRuleMap.putAll(map);
+
+            Map<String, Long> idMap = relationFieldList.stream().collect(Collectors.toMap(AutoFieldRule::getName,
+                    AutoFieldRule::getAutoNum, (a, b) -> a));
+            relationIdMap.putAll(idMap);
+        }
+
         StringBuilder values = new StringBuilder();
         for (int i = 0; i < limit; i++) {
             values.append("(");
             for (int j = 0; j < fields.size(); j++) {
-                //获取随机值
-                Class<?> type = fields.get(j).getType();
-                FoolRandom random = RandomFactory.getByType(type);
-                Object value = random.randomValue(fields.get(j));
+                Object value = null;
+                Field field = fields.get(j);
+                //关联字段在范围内自增
+                if (fieldRuleMap.containsKey(field.getName())) {
+                    AutoFieldRule rule = fieldRuleMap.get(field.getName());
+                    value = relationIdMap.compute(field.getName(), (k,v) -> {
+                        v = v + 1L;
+                        if(rule.getLimit() != null && v > rule.getLimit()){
+                            v = rule.getAutoNum() + 1L;
+                        }
+                        return v;
+                    });
+                } else {
+                    //获取随机值
+                    Class<?> type = field.getType();
+                    FoolRandom random = RandomFactory.getByType(type);
+                    value = random.randomValue(fields.get(j));
+                }
                 //转换并拼接值
                 values.append(convertValue(value));
                 if (j != fields.size() - 1) {
@@ -183,12 +226,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
     }
 
     public static void main(String[] args) {
-/*        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
-        String sql = mySqlSqlBuilder.buildInsertSql(FoolDatabase.class,100);
-        System.out.println(sql);*/
-        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
-        String sql = mySqlSqlBuilder.buildSelectSql(FoolDatabase.class, "id", 0, 1000);
-        System.out.println(sql);
+
     }
 
 }

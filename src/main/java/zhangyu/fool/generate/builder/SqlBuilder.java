@@ -1,6 +1,9 @@
 package zhangyu.fool.generate.builder;
 
 import zhangyu.fool.generate.annotation.feild.Join;
+import zhangyu.fool.generate.builder.model.AutoFieldRule;
+
+import java.util.List;
 
 /**
  * @author xiaomingzhang
@@ -15,6 +18,8 @@ public interface SqlBuilder {
      * @return
      */
     String buildInsertSql(Class<?> entityClass, int rowNum);
+
+    String buildInsertSql(Class<?> entityClass, List<AutoFieldRule> ruleList, int rowNum);
 
     /**
      * 构建查询语句
