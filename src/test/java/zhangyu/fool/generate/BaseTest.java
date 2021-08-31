@@ -1,6 +1,9 @@
 package zhangyu.fool.generate;
 
 import org.junit.jupiter.api.BeforeEach;
+import zhangyu.fool.generate.object.school.Course;
+import zhangyu.fool.generate.object.school.Sc;
+import zhangyu.fool.generate.object.school.Student;
 import zhangyu.fool.generate.util.ConnectUtil;
 
 import java.io.BufferedReader;
@@ -11,6 +14,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Stream;
 
 /**
@@ -26,6 +30,10 @@ public class BaseTest {
     private static final String H2_USERNAME = "sa";
 
     private static final String H2_PASSWORD = "sa";
+
+    protected static final Class<?> [] entityArray = {Course.class, Sc.class, Student.class};
+
+    private static final Random random = new Random();
 
     @BeforeEach
     void initDatabase() {
@@ -51,6 +59,10 @@ public class BaseTest {
 
     }
 
+
+    protected int getRandomInt(int min, int max){
+        return random.nextInt(max - min + 1) + min;
+    }
 
     private String readSqlFile(String sqlFilePath) {
         StringBuilder sql = new StringBuilder();

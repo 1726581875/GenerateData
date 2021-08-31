@@ -1,17 +1,18 @@
 package zhangyu.fool.generate.builder;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import zhangyu.fool.generate.BaseTest;
 import zhangyu.fool.generate.object.FoolDatabase;
+import zhangyu.fool.generate.object.school.Course;
+
+import java.util.Random;
 
 /**
  * @author xmz
  * @date: 2021/08/19
  */
 @DisplayName("MySqlSqlBuilderTest")
-public class MySqlSqlBuilderTest {
+public class MySqlSqlBuilderTest extends BaseTest {
 
     private SqlBuilder sqlSqlBuilder;
 
@@ -21,21 +22,28 @@ public class MySqlSqlBuilderTest {
     }
 
 
-    @DisplayName("buildInsertSqlTest")
-    @Test
+    @RepeatedTest(2)
+    @DisplayName("构建insert语句")
     public void buildInsertSqlTest() {
-        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
-        String sql = mySqlSqlBuilder.buildInsertSql(FoolDatabase.class, 100);
-        Assertions.assertNotNull(sql, "must be not null");
-        System.out.println(sql);
+        for (Class<?> clazz : entityArray) {
+            MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
+            String sql = mySqlSqlBuilder.buildInsertSql(clazz, getRandomInt(1, 20));
+            Assertions.assertNotNull(sql, "must be not null");
+            System.out.println(sql);
+            System.out.println("=== 分隔线 ===");
+        }
     }
 
-    @Test
+    @RepeatedTest(2)
+    @DisplayName("构建select max(id)语句")
     public void buildSelectMaxIdSqlTest(){
-        String fieldName = "id";
-        String sql = sqlSqlBuilder.buildSelectMaxIdSql(FoolDatabase.class, fieldName);
-        Assertions.assertNotNull(sql, "must be not null");
-        System.out.println(sql);
+        for (Class<?> clazz : entityArray) {
+            String fieldName = "id";
+            String sql = sqlSqlBuilder.buildSelectMaxIdSql(clazz, fieldName);
+            Assertions.assertNotNull(sql, "must be not null");
+            System.out.println(sql);
+            System.out.println("=== 分隔线 ===");
+        }
     }
 
 

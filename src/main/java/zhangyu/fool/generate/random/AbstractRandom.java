@@ -18,7 +18,6 @@ public abstract class AbstractRandom implements FoolRandom {
     protected Faker FAKER = new Faker(Locale.CHINA);
 
     protected int getRandomInt(int min, int max){
-
         return random.nextInt(max - min + 1) + min;
     }
 
