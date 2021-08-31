@@ -34,6 +34,11 @@ public class MySqlRunner {
     }
 
 
+    /**
+     * 仅仅单表数据生成成
+     * @param entityClass
+     * @param rowNum
+     */
     public void run(Class<?> entityClass, int rowNum) {
         List<String> sqlList = buildInsertSql(entityClass, null, rowNum);
         //执行SQL
@@ -42,6 +47,12 @@ public class MySqlRunner {
         System.out.println("执行sql耗时：" + (System.currentTimeMillis() - exeTime));
     }
 
+    /**
+     * 支持多表有关联字段数据生成
+     * todo 目前仅支持自增id作为关联字段
+     * @param entityClass
+     * @param rowNum
+     */
     public void toRun(Class<?> entityClass, int rowNum) {
         // init joinNodeList
         List<JoinTreeNode> joinNodeList = new ArrayList<>();
