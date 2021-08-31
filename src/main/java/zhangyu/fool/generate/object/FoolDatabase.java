@@ -12,34 +12,20 @@ import java.util.Date;
  * @date: 2021/07/17
  */
 public class FoolDatabase {
-    /**
-     * 主键id
-     */
+
     @Id(IdType.AUTH)
-    private Integer id;
-    /**
-     * 数据库名
-     */
+    private Long id;
     @Char(rule = RuleType.NAME)
     private String name;
-    /**
-     * 所属数据源id
-     */
-    @Join(object = FoolDataSource.class, field = "id")
-    private Integer sourceId;
+
+    private Long sourceId;
     /**
      * 状态|1正常、2已删除
      */
     @Number(min = 0,max = 1)
     private Integer status;
-    /**
-     * 创建时间
-     */
     @Ignore
     private Date createTime;
-    /**
-     * 修改时间
-     */
     @Ignore
     private Date updateTime;
 

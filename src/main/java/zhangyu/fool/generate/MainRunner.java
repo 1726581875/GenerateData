@@ -1,6 +1,5 @@
 package zhangyu.fool.generate;
 import zhangyu.fool.generate.object.FoolDatabase;
-import zhangyu.fool.generate.object.FoolTable;
 import zhangyu.fool.generate.runner.MySqlRunner;
 
 /**
@@ -11,7 +10,7 @@ public class MainRunner {
 
     public static void main(String[] args) {
         MySqlRunner mySqlRunner = new MySqlRunner();
-        mySqlRunner.toRun(FoolTable.class, 5);
+        mySqlRunner.toRun(FoolDatabase.class, 5);
     }
 
 }

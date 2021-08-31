@@ -10,18 +10,28 @@ import java.sql.DriverManager;
  * 数据库连接工具
  */
 public class ConnectUtil {
+
+    private static Config config;
+
+    public static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
+    public static final String H2_DRIVER = "org.h2.Driver";
+
+    static {
+        // 获取到xml文件里配置的连接参数
+        String url = PropertiesReader.get("url");
+        String username = PropertiesReader.get("username");
+        String password = PropertiesReader.get("password");
+        String driver = PropertiesReader.get("driver");
+        config = new Config(url, username, password, driver);
+    }
+
     /**
      * 获取数据库连接
      *
      * @return
      */
     public static Connection getConnection() {
-        // 获取到xml文件里配置的连接参数
-        String url = PropertiesReader.get("url");
-        String username = PropertiesReader.get("username");
-        String password = PropertiesReader.get("password");
-        String driver = PropertiesReader.get("driver");
-        return getConnection(new Config(url, username, password, driver));
+        return getConnection(config);
     }
 
 
@@ -35,7 +45,12 @@ public class ConnectUtil {
         }
     }
 
-    final static class Config {
+    public static void setConfig(Config connConfig){
+        config = connConfig;
+    }
+
+
+    public final static class Config {
         String url;
         String username;
         String password;
@@ -64,5 +79,7 @@ public class ConnectUtil {
             return driver;
         }
     }
+
+
 
 }

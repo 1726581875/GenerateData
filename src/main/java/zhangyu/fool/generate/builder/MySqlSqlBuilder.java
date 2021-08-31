@@ -161,18 +161,9 @@ public class MySqlSqlBuilder implements SqlBuilder {
     private String getValueSqlSegment(List<Field> fields, List<AutoFieldRule> relationFieldList, int limit) {
 
         Map<String, AutoFieldRule> fieldRuleMap = new HashMap<>(16);
-
         Map<String, Long> relationIdMap = new HashMap<>(16);
 
-        if (relationFieldList != null) {
-            Map<String, AutoFieldRule> map = relationFieldList.stream().collect(Collectors.toMap(AutoFieldRule::getName,
-                    Function.identity(), (a, b) -> a));
-            fieldRuleMap.putAll(map);
-
-            Map<String, Long> idMap = relationFieldList.stream().collect(Collectors.toMap(AutoFieldRule::getName,
-                    AutoFieldRule::getAutoNum, (a, b) -> a));
-            relationIdMap.putAll(idMap);
-        }
+        initFieldRuleMap(relationFieldList, fieldRuleMap, relationIdMap);
 
         StringBuilder values = new StringBuilder();
         for (int i = 0; i < limit; i++) {
@@ -210,6 +201,18 @@ public class MySqlSqlBuilder implements SqlBuilder {
             }
         }
         return values.toString();
+    }
+
+    private void initFieldRuleMap(List<AutoFieldRule> relationFieldList,Map<String, AutoFieldRule> fieldRuleMap, Map<String, Long> relationIdMap){
+        if (relationFieldList != null) {
+            Map<String, AutoFieldRule> map = relationFieldList.stream()
+                    .collect(Collectors.toMap(AutoFieldRule::getName, Function.identity(), (a, b) -> a));
+            fieldRuleMap.putAll(map);
+
+            Map<String, Long> idMap = relationFieldList.stream()
+                    .collect(Collectors.toMap(AutoFieldRule::getName, AutoFieldRule::getAutoNum, (a, b) -> a));
+            relationIdMap.putAll(idMap);
+        }
     }
 
     private String convertValue(Object value) {

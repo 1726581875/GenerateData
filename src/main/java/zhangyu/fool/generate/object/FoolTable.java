@@ -6,8 +6,6 @@ import zhangyu.fool.generate.annotation.feild.Number;
 import zhangyu.fool.generate.enums.IdType;
 import zhangyu.fool.generate.enums.RuleType;
 
-import java.util.Date;
-
 /**
  * @author xmz
  * @date: 2021/08/24
