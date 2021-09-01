@@ -7,7 +7,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.io.IOException;
@@ -25,12 +26,17 @@ public class EsBuilder {
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        searchSourceBuilder.aggregation(AggregationBuilders.terms("top_10_states").field("state").size(10));
+        //searchSourceBuilder.aggregation(AggregationBuilders.terms("top_10_states").field("state").size(10));
 
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices("social-*");
+        searchRequest.indices("course_record");
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = searchResponse.getHits();
+        SearchHit[] hitArr = hits.getHits();
+        for (SearchHit hit : hitArr){
+            System.out.println(hit.getSourceAsString());
+        }
     }
 
 }
