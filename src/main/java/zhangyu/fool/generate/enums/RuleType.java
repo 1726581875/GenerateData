@@ -1,8 +1,8 @@
 package zhangyu.fool.generate.enums;
 
-import zhangyu.fool.generate.random.string.NameRandom;
-import zhangyu.fool.generate.random.string.RuleStringRandom;
-import zhangyu.fool.generate.random.string.SchoolRandom;
+import zhangyu.fool.generate.service.random.string.NameRandom;
+import zhangyu.fool.generate.service.random.string.RuleStringRandom;
+import zhangyu.fool.generate.service.random.string.SchoolRandom;
 
 /**
  * @author xiaomingzhang

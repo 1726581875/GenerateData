@@ -1,6 +1,6 @@
 package zhangyu.fool.generate.util;
 
-import zhangyu.fool.generate.reader.PropertiesReader;
+import zhangyu.fool.generate.service.reader.PropertiesReader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

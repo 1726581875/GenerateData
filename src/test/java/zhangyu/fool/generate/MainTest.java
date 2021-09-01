@@ -1,8 +1,7 @@
 package zhangyu.fool.generate;
 
-import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import zhangyu.fool.generate.builder.MySqlSqlBuilderTest;
+import zhangyu.fool.generate.service.builder.MySqlSqlBuilderTest;
 
 /**
  * @author xmz

@@ -1,6 +1,6 @@
 package zhangyu.fool.generate;
 import zhangyu.fool.generate.object.FoolDatabase;
-import zhangyu.fool.generate.runner.MySqlRunner;
+import zhangyu.fool.generate.service.runner.MySqlRunner;
 
 /**
  * @author xiaomingzhang
