@@ -1,5 +1,6 @@
 package zhangyu.fool.generate.service.executor;
 
+import zhangyu.fool.generate.exception.RunSqlException;
 import zhangyu.fool.generate.util.ConnectUtil;
 
 import java.sql.Connection;
@@ -18,7 +19,7 @@ public class MySqlExecutor implements SqlExecutor {
                 statement.execute(sql);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("execute sql execute", e);
+            throw new RunSqlException("execute sql execute", e);
         }
     }
 
@@ -30,8 +31,7 @@ public class MySqlExecutor implements SqlExecutor {
             resultSet.next();
             return resultSet.getObject(1, type);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("execute sql execute", e);
+            throw new RunSqlException("execute sql execute", e);
         }
     }
 }

@@ -18,6 +18,13 @@ public interface SqlBuilder {
      */
     String buildInsertSql(Class<?> entityClass, int rowNum);
 
+    /**
+     * 构建根据sql构造插入语句
+     * @param entityClass
+     * @param ruleList
+     * @param rowNum
+     * @return
+     */
     String buildInsertSql(Class<?> entityClass, List<AutoFieldRule> ruleList, int rowNum);
 
     /**
@@ -30,7 +37,12 @@ public interface SqlBuilder {
      */
     String buildSelectSql(Class<?> entityClass, String fieldName, int offset, int limit);
 
-
+    /**
+     * 构造获取数据库最大自增id值sql
+     * @param entityClass
+     * @param fieldName
+     * @return
+     */
     String buildSelectMaxIdSql(Class<?> entityClass, String fieldName);
 
 }
