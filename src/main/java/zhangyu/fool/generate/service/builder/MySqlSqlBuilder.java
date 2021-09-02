@@ -5,7 +5,6 @@ import zhangyu.fool.generate.annotation.feild.Id;
 import zhangyu.fool.generate.annotation.feild.Ignore;
 import zhangyu.fool.generate.service.builder.model.AutoFieldRule;
 import zhangyu.fool.generate.enums.IdType;
-import zhangyu.fool.generate.service.random.FoolRandom;
 import zhangyu.fool.generate.service.random.factory.RandomFactory;
 import zhangyu.fool.generate.util.NameUtil;
 
@@ -173,19 +172,10 @@ public class MySqlSqlBuilder implements SqlBuilder {
                 Field field = fields.get(j);
                 //关联字段在范围内自增
                 if (fieldRuleMap.containsKey(field.getName())) {
-                    AutoFieldRule rule = fieldRuleMap.get(field.getName());
-                    value = relationIdMap.compute(field.getName(), (k,v) -> {
-                        v = v + 1L;
-                        if(rule.getLimit() != null && v > rule.getLimit()){
-                            v = rule.getAutoNum() + 1L;
-                        }
-                        return v;
-                    });
+                    value = getNumberValueByRule(fieldRuleMap, relationIdMap, field.getName());
                 } else {
                     //获取随机值
-                    Class<?> type = field.getType();
-                    FoolRandom random = RandomFactory.getByType(type);
-                    value = random.randomValue(fields.get(j));
+                    value = RandomFactory.getRandomValueType(field);
                 }
                 //转换并拼接值
                 values.append(convertValue(value));
@@ -202,6 +192,26 @@ public class MySqlSqlBuilder implements SqlBuilder {
         }
         return values.toString();
     }
+
+    /**
+     * 获取规则范围内数字
+     * @param fieldRuleMap
+     * @param relationIdMap
+     * @param fieldName
+     * @return
+     */
+    private Object getNumberValueByRule(Map<String, AutoFieldRule> fieldRuleMap, Map<String, Long> relationIdMap, String fieldName) {
+        AutoFieldRule rule = fieldRuleMap.get(fieldName);
+        Long value = relationIdMap.compute(fieldName, (k,v) -> {
+            v = v + 1L;
+            if(rule.getLimit() != null && v > rule.getLimit()){
+                v = rule.getAutoNum() + 1L;
+            }
+            return v;
+        });
+        return value;
+    }
+
 
     private void initFieldRuleMap(List<AutoFieldRule> relationFieldList,Map<String, AutoFieldRule> fieldRuleMap, Map<String, Long> relationIdMap){
         if (relationFieldList != null) {

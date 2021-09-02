@@ -5,6 +5,7 @@ import zhangyu.fool.generate.MainRunner;
 import zhangyu.fool.generate.annotation.BindType;
 import zhangyu.fool.generate.service.random.FoolRandom;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +39,12 @@ public class RandomFactory {
         });
     }
 
+    /**
+     * 获取一个random
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T extends FoolRandom> T get(Class<T> clazz){
         if(BEAN_MAP.get(clazz) == null){
             try {
@@ -54,12 +61,25 @@ public class RandomFactory {
 
     /**
      * 根据java包装类型获取对应的random类
-     * @param clazz 基本类型class
+     * @param typeClass
      * @param
      * @return
      */
-    public static FoolRandom getByType(Class<?> clazz){
-        return MAPPING_MAP.get(clazz);
+    public static FoolRandom getRandomByType(Class<?> typeClass) {
+        return MAPPING_MAP.get(typeClass);
+    }
+
+    /**
+     * 根据Field获取对应随机值
+     * @param field
+     * @return
+     */
+    public static Object getRandomValueType(Field field) {
+        FoolRandom random = getRandomByType(field.getType());
+        if(random == null) {
+            throw new RuntimeException("获取不到对应random类");
+        }
+        return random.randomValue(field);
     }
 
 }
