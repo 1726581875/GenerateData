@@ -46,8 +46,8 @@ public class ElasticsearchExecutor {
         });
         try {
             BulkResponse response = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
-            if(response == null || response.hasFailures()){
-                log.error("insert es fail,case: {}", response.buildFailureMessage());
+            if(response.hasFailures()){
+                log.error("insert es fail,case: {}",  response.buildFailureMessage());
                 throw new RunSqlException("bulk has failures");
             }else {
                 System.out.println("bulk has success");
