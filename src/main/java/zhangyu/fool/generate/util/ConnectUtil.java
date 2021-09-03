@@ -18,10 +18,10 @@ public class ConnectUtil {
 
     static {
         // 获取到xml文件里配置的连接参数
-        String url = PropertiesReader.get("url");
-        String username = PropertiesReader.get("username");
-        String password = PropertiesReader.get("password");
-        String driver = PropertiesReader.get("driver");
+        String url = PropertiesReader.get("mysql.url");
+        String username = PropertiesReader.get("mysql.username");
+        String password = PropertiesReader.get("mysql.password");
+        String driver = PropertiesReader.get("mysql.driver");
         config = new Config(url, username, password, driver);
     }
 

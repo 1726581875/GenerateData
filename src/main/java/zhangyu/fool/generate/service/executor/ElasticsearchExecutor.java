@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import zhangyu.fool.generate.exception.RunSqlException;
 import zhangyu.fool.generate.object.test.es.Course;
 import zhangyu.fool.generate.service.builder.ElasticsearchDataBuilder;
+import zhangyu.fool.generate.service.reader.PropertiesReader;
 
 import java.io.IOException;
 
@@ -30,7 +31,9 @@ public class ElasticsearchExecutor {
     private static RestHighLevelClient restHighLevelClient;
 
     static {
-        restHighLevelClient = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+        String host = PropertiesReader.get("es.host");
+        Integer port = Integer.parseInt(PropertiesReader.get("es.port"));
+        restHighLevelClient = new RestHighLevelClient(RestClient.builder(new HttpHost(host, port, "http")));
     }
 
     public void execute(String index, String jsonArrStr) {
