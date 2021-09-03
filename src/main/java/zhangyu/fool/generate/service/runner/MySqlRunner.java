@@ -84,11 +84,10 @@ public class MySqlRunner {
         if (Integer.class.equals(type) || Long.class.equals(type)) {
             return buildInsertSql(node.getObjectClass(), autoFieldRules, node.getRow());
         } else if (String.class.equals(type)) {
-
+            throw new UnsupportedOperationException("不支持[" + type.getName() + "]类型的关联字段");
         } else {
             throw new UnsupportedOperationException("不支持[" + type.getName() + "]类型的关联字段");
         }
-        return new ArrayList<>();
     }
 
 

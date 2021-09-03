@@ -1,10 +1,11 @@
-package zhangyu.fool.generate.object;
+package zhangyu.fool.generate.object.test.mysql;
 import zhangyu.fool.generate.annotation.feild.Char;
 import zhangyu.fool.generate.annotation.feild.Id;
 import zhangyu.fool.generate.annotation.feild.Join;
 import zhangyu.fool.generate.annotation.feild.Number;
 import zhangyu.fool.generate.enums.IdType;
 import zhangyu.fool.generate.enums.RuleType;
+import zhangyu.fool.generate.object.test.mysql.FoolDatabase;
 
 /**
  * @author xmz

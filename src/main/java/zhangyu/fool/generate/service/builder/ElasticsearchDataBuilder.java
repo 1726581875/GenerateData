@@ -1,7 +1,8 @@
 package zhangyu.fool.generate.service.builder;
 
 import com.google.gson.Gson;
-import zhangyu.fool.generate.object.FoolDatabase;
+import com.google.gson.GsonBuilder;
+import zhangyu.fool.generate.object.test.mysql.FoolDatabase;
 import zhangyu.fool.generate.service.random.factory.RandomFactory;
 
 import java.lang.reflect.Field;
@@ -15,7 +16,7 @@ public class ElasticsearchDataBuilder {
 
 
     public String buildJsonObjectArray(Class<?> entityClass, int rowNum){
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         List<Object> objectList = new ArrayList<>(rowNum);
         for (int i = 0; i < rowNum; i++) {
             try {

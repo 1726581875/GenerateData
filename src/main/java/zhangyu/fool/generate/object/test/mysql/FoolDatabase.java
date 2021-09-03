@@ -1,4 +1,4 @@
-package zhangyu.fool.generate.object;
+package zhangyu.fool.generate.object.test.mysql;
 
 import zhangyu.fool.generate.annotation.feild.*;
 import zhangyu.fool.generate.annotation.feild.Number;
