@@ -1,7 +1,8 @@
-package zhangyu.fool.generate.service.random.string;
+package zhangyu.fool.generate.service.random.string.rule;
 
 import zhangyu.fool.generate.annotation.BindRole;
 import zhangyu.fool.generate.enums.RuleType;
+import zhangyu.fool.generate.service.random.string.StringRandom;
 import zhangyu.fool.generate.service.reader.TextFileReader;
 
 import java.util.List;

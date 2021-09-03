@@ -4,6 +4,7 @@ import zhangyu.fool.generate.annotation.BindType;
 import zhangyu.fool.generate.annotation.feild.Char;
 import zhangyu.fool.generate.enums.RuleType;
 import zhangyu.fool.generate.service.random.AbstractRandom;
+import zhangyu.fool.generate.service.random.string.rule.RuleStringRandom;
 
 import java.lang.reflect.Field;
 

@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -160,9 +159,9 @@ public class MySqlSqlBuilder implements SqlBuilder {
     private String getValueSqlSegment(List<Field> fields, List<AutoFieldRule> relationFieldList, int limit) {
 
         Map<String, AutoFieldRule> fieldRuleMap = new HashMap<>(16);
-        Map<String, Long> relationIdMap = new HashMap<>(16);
+        Map<String, Long> autoIdMap = new HashMap<>(16);
 
-        initFieldRuleMap(relationFieldList, fieldRuleMap, relationIdMap);
+        initFieldRuleMap(relationFieldList, fieldRuleMap, autoIdMap);
 
         StringBuilder values = new StringBuilder();
         for (int i = 0; i < limit; i++) {
@@ -172,7 +171,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
                 Field field = fields.get(j);
                 //关联字段在范围内自增
                 if (fieldRuleMap.containsKey(field.getName())) {
-                    value = getNumberValueByRule(fieldRuleMap, relationIdMap, field.getName());
+                    value = getNumberValueByRule(fieldRuleMap, autoIdMap, field.getName());
                 } else {
                     //获取随机值
                     value = RandomFactory.getRandomValueType(field);
@@ -202,9 +201,9 @@ public class MySqlSqlBuilder implements SqlBuilder {
      */
     private Object getNumberValueByRule(Map<String, AutoFieldRule> fieldRuleMap, Map<String, Long> relationIdMap, String fieldName) {
         AutoFieldRule rule = fieldRuleMap.get(fieldName);
-        Long value = relationIdMap.compute(fieldName, (k,v) -> {
+        Long value = relationIdMap.compute(fieldName, (k, v) -> {
             v = v + 1L;
-            if(rule.getLimit() != null && v > rule.getLimit()){
+            if (rule.getLimit() != null && v > rule.getLimit()) {
                 v = rule.getAutoNum() + 1L;
             }
             return v;
@@ -213,15 +212,12 @@ public class MySqlSqlBuilder implements SqlBuilder {
     }
 
 
-    private void initFieldRuleMap(List<AutoFieldRule> relationFieldList,Map<String, AutoFieldRule> fieldRuleMap, Map<String, Long> relationIdMap){
-        if (relationFieldList != null) {
-            Map<String, AutoFieldRule> map = relationFieldList.stream()
-                    .collect(Collectors.toMap(AutoFieldRule::getName, Function.identity(), (a, b) -> a));
-            fieldRuleMap.putAll(map);
-
-            Map<String, Long> idMap = relationFieldList.stream()
-                    .collect(Collectors.toMap(AutoFieldRule::getName, AutoFieldRule::getAutoNum, (a, b) -> a));
-            relationIdMap.putAll(idMap);
+    private void initFieldRuleMap(List<AutoFieldRule> autoFieldRuleList, Map<String, AutoFieldRule> autoFieldRuleMap, Map<String, Long> autoIdMap) {
+        if (autoFieldRuleList != null) {
+            for (AutoFieldRule fieldRule : autoFieldRuleList) {
+                autoFieldRuleMap.put(fieldRule.getName(), fieldRule);
+                autoIdMap.put(fieldRule.getName(), fieldRule.getAutoNum());
+            }
         }
     }
 

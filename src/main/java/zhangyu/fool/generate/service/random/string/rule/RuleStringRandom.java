@@ -1,4 +1,4 @@
-package zhangyu.fool.generate.service.random.string;
+package zhangyu.fool.generate.service.random.string.rule;
 
 /**
  * @author xiaomingzhang

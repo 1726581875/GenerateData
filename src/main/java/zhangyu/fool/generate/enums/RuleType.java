@@ -1,8 +1,9 @@
 package zhangyu.fool.generate.enums;
 
-import zhangyu.fool.generate.service.random.string.NameRandom;
-import zhangyu.fool.generate.service.random.string.RuleStringRandom;
-import zhangyu.fool.generate.service.random.string.SchoolRandom;
+import zhangyu.fool.generate.service.random.string.rule.NameRandom;
+import zhangyu.fool.generate.service.random.string.rule.PhoneNumberRandom;
+import zhangyu.fool.generate.service.random.string.rule.RuleStringRandom;
+import zhangyu.fool.generate.service.random.string.rule.SchoolRandom;
 
 /**
  * @author xiaomingzhang
@@ -21,7 +22,11 @@ public enum RuleType {
     /**
      * 学校
      */
-    SCHOOL(SchoolRandom.class)
+    SCHOOL(SchoolRandom.class),
+    /**
+     * 手机号码
+     */
+    PHONE(PhoneNumberRandom.class),
     ;
     private Class<?> clazz;
 
