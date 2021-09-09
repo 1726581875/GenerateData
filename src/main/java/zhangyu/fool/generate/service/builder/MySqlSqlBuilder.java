@@ -29,7 +29,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
     /**
      * mysql一次性插入数据受MySQL max_allowed_packet参数限制，为了不超过其阈值，设置最大批量大小
      */
-    private static final int BATCH_NUM = 10000;
+    public static final int BATCH_NUM = 10000;
 
     @Override
     public String buildInsertSql(Class<?> entityClass, int rowNum) {
@@ -141,7 +141,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
         for (int i = 0; i < fields.size(); i++) {
             String fieldName = NameUtil.convertToDataBaseRule(fields.get(i).getName());
             fieldStr.append(NameUtil.around(fieldName, "`"));
-            if (i != fields.size() - 1) {
+            if (notLastIndex(i, fields.size())) {
                 fieldStr.append(",");
             }
         }
@@ -169,8 +169,8 @@ public class MySqlSqlBuilder implements SqlBuilder {
             for (int j = 0; j < fields.size(); j++) {
                 Object value = null;
                 Field field = fields.get(j);
-                //关联字段在范围内自增
                 if (fieldRuleMap.containsKey(field.getName())) {
+                    //关联字段在规则范围内自增
                     value = getNumberValueByRule(fieldRuleMap, autoIdMap, field.getName());
                 } else {
                     //获取随机值
@@ -178,18 +178,22 @@ public class MySqlSqlBuilder implements SqlBuilder {
                 }
                 //转换并拼接值
                 values.append(convertValue(value));
-                if (j != fields.size() - 1) {
+                if (notLastIndex(j, fields.size())) {
                     values.append(",");
                 }
             }
-            values.append(")");
-            if (i != limit - 1) {
-                values.append("," + "\n");
-            } else {
-                values.append(";");
-            }
+            values.append(isLastIndex(i, limit) ? ");" : "),\n");
         }
         return values.toString();
+    }
+
+
+    private boolean notLastIndex(int index, int size){
+        return !isLastIndex(index,size);
+    }
+
+    private boolean isLastIndex(int index, int size){
+        return index == size - 1;
     }
 
     /**
@@ -228,8 +232,10 @@ public class MySqlSqlBuilder implements SqlBuilder {
         } else if (value instanceof Date) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             str = NameUtil.around(dateFormat.format(value), "'");
-        } else {
+        } else if (value instanceof Number) {
             str = String.valueOf(value);
+        } else {
+            str = NameUtil.around((String) value, "'");
         }
         return str;
     }

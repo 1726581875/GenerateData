@@ -6,29 +6,46 @@ import java.util.List;
  * @author xmz
  * @date: 2021/08/28
  */
-public class JoinTreeNode {
+public class TableNode {
 
+    /**
+     * @Join 注解绑定的class
+     */
     private Class<?> objectClass;
     /**
-     * @see @Join 注解里的field属性列
+     * @Join 注解里的field属性列值
+     * 根节点则是null
      */
     private String joinField;
     /**
-     * 绑定列，标记@Join注解所在列名
+     * 绑定列，被标记@Join注解所在列名
      */
     private String bindField;
-
+    /**
+     * 关系
+     */
     private int rel;
-
+    /**
+     *
+     */
     private int row;
 
-    private List<JoinTreeNode> childrenNode;
+    private List<TableNode> childrenNode;
 
-    public JoinTreeNode(Class<?> objectClass, String joinField, int rel, int row) {
+    public TableNode(Class<?> objectClass, String joinField, int rel, int row, String bindField) {
         this.objectClass = objectClass;
         this.joinField = joinField;
         this.rel = rel;
         this.row = row;
+        this.bindField = bindField;
+    }
+
+    public boolean isRootNode() {
+        return joinField == null;
+    }
+
+    public boolean notIsRootNode(){
+        return !isRootNode();
     }
 
     public Class<?> getObjectClass() {
@@ -63,11 +80,11 @@ public class JoinTreeNode {
         this.row = row;
     }
 
-    public List<JoinTreeNode> getChildrenNode() {
+    public List<TableNode> getChildrenNode() {
         return childrenNode;
     }
 
-    public void setChildrenNode(List<JoinTreeNode> childrenNode) {
+    public void setChildrenNode(List<TableNode> childrenNode) {
         this.childrenNode = childrenNode;
     }
 

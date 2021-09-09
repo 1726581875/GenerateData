@@ -25,7 +25,7 @@ public class MySqlExecutorTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("执行 select max(id)语句")
+    @DisplayName("执行 insert into 语句")
     public void executeInsertSqlTest(){
         foreachTest(clazz -> {
             // build sql
