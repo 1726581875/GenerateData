@@ -33,7 +33,7 @@ public class FoolDatabase {
      * 数字，范围是[0,1]
      */
     @Number(min = 0,max = 1)
-    private Integer status;
+    private int status;
 
     /**
      * 忽略的列，表示不需要生成
@@ -44,4 +44,15 @@ public class FoolDatabase {
     @Ignore
     private Date updateTime;
 
+    @Override
+    public String toString() {
+        return "FoolDatabase{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sourceId=" + sourceId +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

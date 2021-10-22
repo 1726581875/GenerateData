@@ -52,7 +52,7 @@ public class MySqlRunner {
      * @param entityClass
      * @param rowNum
      */
-    public void toRun(Class<?> entityClass, int rowNum) {
+    public void batchGenerateData(Class<?> entityClass, int rowNum) {
         // 初始化根节点
         List<TableNode> tableNodeList = new ArrayList<>();
         TableNode parentNode = new TableNode(entityClass, null, 1, rowNum, null);
@@ -107,7 +107,6 @@ public class MySqlRunner {
             log.debug("=====  分隔线  =====");
             sqlList.add(sql);
         }
-
         log.debug("构造SQL耗时={}ms，数量={}", (System.currentTimeMillis() - beginTime), rowNum);
         return sqlList;
     }
@@ -136,7 +135,7 @@ public class MySqlRunner {
 
     private Long getAutoMaxId(TableNode node, Class<?> type) {
         String selectSql = sqlBuilder.buildSelectMaxIdSql(node.getObjectClass(), node.getJoinField());
-        Object result = sqlExecutor.execute(selectSql, type);
+        Object result = sqlExecutor.getOne(selectSql, type);
         return result == null ? 0L : Long.valueOf(result.toString());
     }
 

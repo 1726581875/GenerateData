@@ -3,6 +3,7 @@ package zhangyu.fool.generate.service.builder;
 import zhangyu.fool.generate.annotation.TableName;
 import zhangyu.fool.generate.annotation.feild.Id;
 import zhangyu.fool.generate.annotation.feild.Ignore;
+import zhangyu.fool.generate.object.test.mysql.FoolDatabase;
 import zhangyu.fool.generate.service.builder.model.AutoFieldRule;
 import zhangyu.fool.generate.enums.IdType;
 import zhangyu.fool.generate.service.random.factory.RandomFactory;
@@ -129,7 +130,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
 
 
     /**
-     * 返回表sql列字段
+     * 拼接表sql列字段
      * 例如：user_id,name,password,create_time
      *
      * @param fields
@@ -149,7 +150,7 @@ public class MySqlSqlBuilder implements SqlBuilder {
     }
 
     /**
-     * 返回值字段
+     * 拼接insert SQL值字段
      * 如：(1,'张三','1234567','2021-08-19'),(2,'李四','1234567','2021-08-20');
      *
      * @param fields
@@ -241,7 +242,9 @@ public class MySqlSqlBuilder implements SqlBuilder {
     }
 
     public static void main(String[] args) {
-
+        MySqlSqlBuilder mySqlSqlBuilder = new MySqlSqlBuilder();
+        String insertSql = mySqlSqlBuilder.buildInsertSql(FoolDatabase.class, 5);
+        System.out.println(insertSql);
     }
 
 }

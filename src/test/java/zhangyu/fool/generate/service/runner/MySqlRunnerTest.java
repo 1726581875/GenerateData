@@ -19,7 +19,7 @@ public class MySqlRunnerTest extends BaseTest {
 
     @Test
     public void runnerTest(){
-        foreachTest(clazz -> sqlRunner.toRun(clazz, getRandomInt(1,20)));
+        foreachTest(clazz -> sqlRunner.batchGenerateData(clazz, getRandomInt(1,20)));
     }
 
 

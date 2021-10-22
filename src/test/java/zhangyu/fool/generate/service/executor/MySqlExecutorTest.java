@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import zhangyu.fool.generate.service.BaseTest;
 import zhangyu.fool.generate.service.builder.MySqlSqlBuilder;
 import zhangyu.fool.generate.service.builder.SqlBuilder;
+import zhangyu.fool.generate.service.runner.MySqlRunner;
+import zhangyu.fool.generate.util.NameUtil;
 
 /**
  * @author xmz
@@ -18,10 +20,13 @@ public class MySqlExecutorTest extends BaseTest {
 
     private SqlExecutor sqlExecutor;
 
+    private MySqlRunner mySqlRunner;
+
     @BeforeEach
     void init() {
         sqlBuilder = new MySqlSqlBuilder();
         sqlExecutor = new MySqlExecutor();
+        mySqlRunner = new MySqlRunner();
     }
 
     @Test
@@ -48,11 +53,33 @@ public class MySqlExecutorTest extends BaseTest {
             Assertions.assertNotNull(sql, "must not be null");
             System.out.println("sql=" + sql);
             // exec sql
-            Object result = sqlExecutor.execute(sql, Long.class);
+            Object result = sqlExecutor.getOne(sql, Long.class);
             Long maxId = result == null ? 0L : (Long) result;
             Assertions.assertTrue(maxId >= 0L && maxId <= Long.MAX_VALUE);
             System.out.println("maxId=" + maxId);
         });
+    }
+
+    @Test
+    @DisplayName("获取单个结果 getOne 函数测试")
+    public void getOneTest() {
+        foreachTest(clazz -> {
+            int row = getRandomInt(1, 20);
+            // 初始化插入数据
+            mySqlRunner.run(clazz, row);
+            String querySql = "select * from " + NameUtil.convertToDataBaseRule(clazz.getSimpleName()) + " limit 1";
+            Object result = sqlExecutor.getOne(querySql, clazz);
+            System.out.println(result);
+        });
+    }
+
+
+    @Test
+    @DisplayName("获取多个结果 getList 函数测试")
+    public void getListTest() {
+        // 初始化插入数据
+        executeInsertSqlTest();
+
     }
 
 }
