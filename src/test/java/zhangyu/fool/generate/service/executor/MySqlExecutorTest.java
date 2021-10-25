@@ -10,6 +10,8 @@ import zhangyu.fool.generate.service.builder.SqlBuilder;
 import zhangyu.fool.generate.service.runner.MySqlRunner;
 import zhangyu.fool.generate.util.NameUtil;
 
+import java.util.List;
+
 /**
  * @author xmz
  * @date: 2021/08/28
@@ -77,8 +79,15 @@ public class MySqlExecutorTest extends BaseTest {
     @Test
     @DisplayName("获取多个结果 getList 函数测试")
     public void getListTest() {
-        // 初始化插入数据
-        executeInsertSqlTest();
+        foreachTest(clazz -> {
+            int row = getRandomInt(1, 20);
+            // 初始化插入数据
+            mySqlRunner.run(clazz, row);
+            String querySql = "select * from " + NameUtil.convertToDataBaseRule(clazz.getSimpleName()) + " limit " + row;
+            List<?> list = sqlExecutor.getList(querySql, clazz);
+            list.forEach(System.out::println);
+            Assertions.assertEquals(row, list.size(), "查询数据量必须正确");
+        });
 
     }
 

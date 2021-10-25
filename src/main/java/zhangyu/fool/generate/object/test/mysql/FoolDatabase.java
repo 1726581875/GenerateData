@@ -33,7 +33,7 @@ public class FoolDatabase {
      * 数字，范围是[0,1]
      */
     @Number(min = 0,max = 1)
-    private int status;
+    private Integer status;
 
     /**
      * 忽略的列，表示不需要生成

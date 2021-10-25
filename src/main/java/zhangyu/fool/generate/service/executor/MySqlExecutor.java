@@ -1,7 +1,5 @@
 package zhangyu.fool.generate.service.executor;
 
-import com.mysql.cj.jdbc.result.ResultSetImpl;
-import org.h2.jdbc.JdbcResultSet;
 import zhangyu.fool.generate.exception.RunSqlException;
 import zhangyu.fool.generate.object.test.mysql.FoolDatabase;
 import zhangyu.fool.generate.util.ConnectUtil;
@@ -61,18 +59,29 @@ public class MySqlExecutor implements SqlExecutor {
                     // 字段命名必须驼峰对应
                     String fieldName = NameUtil.convertToDataBaseRule(field.getName());
                     Set<String> tableColumnNameSet = getTableColumnNameSet(resultSet);
-                    // 字段匹配
+                    // 字段匹配，存在的列才获取结果并赋值
                     if (tableColumnNameSet.contains(fieldName)) {
                         Object value = resultSet.getObject(fieldName);
                         if (Objects.nonNull(value)) {
                             field.setAccessible(true);
-                            field.set(resultInstance, value);
+                            field.set(resultInstance, convertValue(field, value));
                         }
                     }
                 }
             }
             return resultInstance;
         }
+    }
+
+
+    private Object convertValue(Field field, Object value) {
+        // h2数据库tinyint查询结果对应java的byte类型，想使用Integer接收在此处做转换
+        if (value instanceof Byte) {
+            if(field.getType().equals(Integer.class) || field.getType().equals(Integer.TYPE)) {
+                value = ((Byte) value).intValue();
+            }
+        }
+        return value;
     }
 
 
@@ -88,16 +97,11 @@ public class MySqlExecutor implements SqlExecutor {
         return resultList.get(0);
     }
 
-    private Set<String> getTableColumnNameSet(ResultSet resultSet) {
+    private Set<String> getTableColumnNameSet(ResultSet resultSet) throws SQLException {
         Set<String> fieldNameSet = new HashSet<>();
-        if(resultSet instanceof ResultSetImpl) {
-            com.mysql.cj.result.Field[] fields = ((ResultSetImpl)resultSet).getColumnDefinition().getFields();
-            for (com.mysql.cj.result.Field field : fields) {
-                fieldNameSet.add(field.getOriginalName());
-            }
-            // todo 需要兼容h2数据库连接驱动
-        } else if(resultSet instanceof JdbcResultSet){
-
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            fieldNameSet.add(metaData.getColumnLabel(i));
         }
         return fieldNameSet;
     }
@@ -128,7 +132,7 @@ public class MySqlExecutor implements SqlExecutor {
 
 
     public static void main(String[] args) {
-        String sql = "select * from fool_database limit 10";
+        String sql = "select * from fool_database limit 1";
         MySqlExecutor mySqlExecutor = new MySqlExecutor();
         List<FoolDatabase> foolDatabase = mySqlExecutor.getList(sql, FoolDatabase.class);
         foolDatabase.forEach(System.out::println);

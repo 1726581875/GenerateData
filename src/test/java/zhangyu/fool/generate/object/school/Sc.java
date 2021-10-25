@@ -43,4 +43,16 @@ public class Sc {
      */
     @Ignore
     private Date updateTime;
+
+    @Override
+    public String toString() {
+        return "Sc{" +
+                "id=" + id +
+                ", studentId=" + studentId +
+                ", courseId=" + courseId +
+                ", grade=" + grade +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

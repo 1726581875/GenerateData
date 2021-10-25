@@ -44,4 +44,15 @@ public class Course{
     @Ignore
     private Date updateTime;
 
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", teacherId=" + teacherId +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }
