@@ -1,7 +1,6 @@
 package zhangyu.fool.generate.service.executor;
 
 import zhangyu.fool.generate.exception.RunSqlException;
-import zhangyu.fool.generate.object.test.mysql.FoolDatabase;
 import zhangyu.fool.generate.util.ConnectUtil;
 import zhangyu.fool.generate.util.NameUtil;
 
@@ -38,8 +37,7 @@ public class MySqlExecutor implements SqlExecutor {
              PreparedStatement prepareStatement = connection.prepareStatement(sql);
              ResultSet resultSet = prepareStatement.executeQuery()) {
             while (resultSet.next()) {
-                T resultItem = analyzeResult(resultSet, type);
-                resultList.add(resultItem);
+                resultList.add(analyzeResult(resultSet, type));
             }
             return resultList;
         } catch (Exception e) {
@@ -49,17 +47,17 @@ public class MySqlExecutor implements SqlExecutor {
     }
 
     private <T> T analyzeResult(ResultSet resultSet, Class<T> type) throws Exception {
-        if (isSupportType(type)) {
+        if (isMappingSupportType(type)) {
             return resultSet.getObject(1, type);
         } else {
             T resultInstance = type.getConstructor().newInstance();
             Field[] declaredFields = type.getDeclaredFields();
             for (Field field : declaredFields) {
-                if (isSupportType(field.getType())) {
-                    // 字段命名必须驼峰对应
+                if (isMappingSupportType(field.getType())) {
+                    // java列名转数据库命名规则，按驼峰对应“_”规则转换
                     String fieldName = NameUtil.convertToDataBaseRule(field.getName());
                     Set<String> tableColumnNameSet = getTableColumnNameSet(resultSet);
-                    // 字段匹配，存在的列才获取结果并赋值
+                    // 字段匹配，存在的列才获取结果并赋值,不存在的列则不做处理保持为null
                     if (tableColumnNameSet.contains(fieldName)) {
                         Object value = resultSet.getObject(fieldName);
                         if (Objects.nonNull(value)) {
@@ -112,7 +110,7 @@ public class MySqlExecutor implements SqlExecutor {
      * @param clazz
      * @return
      */
-    public static boolean isSupportType(Class clazz) {
+    private static boolean isMappingSupportType(Class clazz) {
         return isBaseType(clazz) || supportTypeSet.contains(clazz);
     }
 
@@ -132,9 +130,9 @@ public class MySqlExecutor implements SqlExecutor {
 
 
     public static void main(String[] args) {
-        String sql = "select * from fool_database limit 1";
+        String sql = "select count(*) from fool_database";
         MySqlExecutor mySqlExecutor = new MySqlExecutor();
-        List<FoolDatabase> foolDatabase = mySqlExecutor.getList(sql, FoolDatabase.class);
-        foolDatabase.forEach(System.out::println);
+        Integer count = mySqlExecutor.getOne(sql, Integer.class);
+        System.out.println(count);
     }
 }

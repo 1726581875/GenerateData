@@ -34,7 +34,7 @@ public class MySqlRunner {
 
 
     /**
-     * 仅仅单表数据生成成
+     * 仅仅单表数据生成
      * @param entityClass
      * @param rowNum
      */

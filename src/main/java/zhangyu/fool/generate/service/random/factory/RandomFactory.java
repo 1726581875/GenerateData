@@ -77,7 +77,7 @@ public class RandomFactory {
 
     /**
      * todo 暂时做适配
-     * 基本类型Class对应的包装类型Class
+     * 获取基本类型Class对应的包装类型Class
      *
      * @param primitiveType
      * @return
