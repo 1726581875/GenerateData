@@ -28,12 +28,12 @@ public class FoolDatabase {
     /**
      * 不写注解，默认随机生成long数字
      */
-    private Long sourceId;
+    private long sourceId;
     /**
      * 数字，范围是[0,1]
      */
     @Number(min = 0,max = 1)
-    private Integer status;
+    private int status;
 
     /**
      * 忽略的列，表示不需要生成

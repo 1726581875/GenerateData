@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  * @author xiaomingzhang
  * @date 2021/8/19
  */
-@BindType(Long.class)
+@BindType({Long.class,long.class})
 public class LongRandom extends NumberRandom {
     @Override
     public Long randomValue(Field field) {

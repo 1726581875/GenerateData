@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
  * @author xiaomingzhang
  * @date 2021/8/19
  */
-@BindType(Float.class)
+@BindType({Float.class, float.class})
 public class FloatRandom extends NumberRandom {
     @Override
     public Object randomValue(Field field) {

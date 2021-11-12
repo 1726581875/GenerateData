@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
  * @author xiaomingzhang
  * @date 2021/8/19
  */
-@BindType(Integer.class)
+@BindType({Integer.class, int.class})
 public class IntegerRandom extends NumberRandom {
 
     @Override

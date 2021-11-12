@@ -22,22 +22,28 @@ public class RandomFactory {
 
     private static final Map<Class<?>, FoolRandom> MAPPING_MAP = new HashMap<>(16);
 
+    /**
+     * 初始化random工厂实例
+     */
     static {
-        //反射获取对应包标有注解的类
+        //反射获取对应包标有带@BindType注解的类
         Reflections reflections = new Reflections(MainRunner.class.getPackage().getName());
-        Set<Class<?>> classSet = reflections.getTypesAnnotatedWith(BindType.class);
-        classSet.stream().forEach(clazz -> {
-            //获取本类标注的注解
-            BindType annotation = clazz.getDeclaredAnnotation(BindType.class);
+        Set<Class<?>> randomClassSet = reflections.getTypesAnnotatedWith(BindType.class);
+        for (Class<?> randomClass : randomClassSet) {
+            //获取本类标注的注解，解析value获取要处理的类型
+            BindType annotation = randomClass.getDeclaredAnnotation(BindType.class);
             if (annotation != null) {
                 try {
-                    FoolRandom instance = (FoolRandom) clazz.newInstance();
-                    MAPPING_MAP.put(annotation.value(), instance);
+                    FoolRandom instance = (FoolRandom) randomClass.newInstance();
+                    Class<?>[] handleTypeClassArr = annotation.value();
+                    for (Class<?> handleTypeClass : handleTypeClassArr) {
+                        MAPPING_MAP.put(handleTypeClass, instance);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        });
+        }
     }
 
     /**
@@ -70,7 +76,7 @@ public class RandomFactory {
      */
     public static FoolRandom getRandomByType(Class<?> typeClass) {
         if (typeClass.isPrimitive()) {
-            typeClass = getPackageType(typeClass);
+            //typeClass = getPackageType(typeClass);
         }
         return MAPPING_MAP.get(typeClass);
     }

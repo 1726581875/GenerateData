@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
  * @author xmz
  * @date: 2021/08/21
  */
-@BindType(Boolean.class)
+@BindType({Boolean.class, boolean.class})
 public class BooleanRandom extends AbstractRandom {
     @Override
     public Boolean randomValue(Field field) {
