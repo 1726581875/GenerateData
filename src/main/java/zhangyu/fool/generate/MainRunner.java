@@ -12,6 +12,7 @@ public class MainRunner {
     public static void main(String[] args) {
         MySqlRunner mySqlRunner = new MySqlRunner();
         mySqlRunner.batchGenerateData(FoolTable.class, 5);
+
     }
 
 }
