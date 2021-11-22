@@ -10,11 +10,11 @@ import zhangyu.fool.generate.service.BaseTest;
  */
 public class MySqlRunnerTest extends BaseTest {
 
-    private MySqlRunner sqlRunner;
+    private MySqlDataInsertRunner sqlRunner;
 
     @BeforeEach
     public void init(){
-        sqlRunner = new MySqlRunner();
+        sqlRunner = new MySqlDataInsertRunner();
     }
 
     @Test

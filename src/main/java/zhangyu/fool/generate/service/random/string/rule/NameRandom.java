@@ -1,6 +1,6 @@
 package zhangyu.fool.generate.service.random.string.rule;
 
-import zhangyu.fool.generate.annotation.BindRole;
+import zhangyu.fool.generate.annotation.BindRule;
 import zhangyu.fool.generate.enums.RuleType;
 import zhangyu.fool.generate.service.random.string.StringRandom;
 import zhangyu.fool.generate.service.reader.TextFileReader;
@@ -11,7 +11,7 @@ import java.util.List;
  * @author xiaomingzhang
  * @date 2021/8/20
  */
-@BindRole(RuleType.NAME)
+@BindRule(RuleType.NAME)
 public class NameRandom extends StringRandom implements RuleStringRandom {
 
     private static List<String> familyNameList = null;

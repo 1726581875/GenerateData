@@ -1,4 +1,4 @@
-package zhangyu.fool.generate.service.executor;
+package zhangyu.fool.generate.service.dao;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -24,9 +24,9 @@ import java.io.IOException;
  * @author xiaomingzhang
  * @date 2021/9/1
  */
-public class ElasticsearchExecutor {
+public class ElasticsearchDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(ElasticsearchExecutor.class);
+    private static final Logger log = LoggerFactory.getLogger(ElasticsearchDAO.class);
 
     private static RestHighLevelClient restHighLevelClient;
 
@@ -78,7 +78,7 @@ public class ElasticsearchExecutor {
         ElasticsearchDataBuilder dataBuilder = new ElasticsearchDataBuilder();
         String objectArray = dataBuilder.buildJsonObjectArray(Course.class, 10);
         System.out.println(objectArray);
-        ElasticsearchExecutor elasticsearchExecutor = new ElasticsearchExecutor();
+        ElasticsearchDAO elasticsearchExecutor = new ElasticsearchDAO();
         elasticsearchExecutor.execute("mooc_course", objectArray);
     }
 

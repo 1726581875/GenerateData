@@ -1,4 +1,4 @@
-package zhangyu.fool.generate.service.executor;
+package zhangyu.fool.generate.service.dao;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import zhangyu.fool.generate.service.BaseTest;
 import zhangyu.fool.generate.service.builder.MySqlSqlBuilder;
 import zhangyu.fool.generate.service.builder.SqlBuilder;
-import zhangyu.fool.generate.service.runner.MySqlRunner;
+import zhangyu.fool.generate.service.runner.MySqlDataInsertRunner;
 import zhangyu.fool.generate.util.NameUtil;
 
 import java.util.List;
@@ -20,15 +20,15 @@ public class MySqlExecutorTest extends BaseTest {
 
     private SqlBuilder sqlBuilder;
 
-    private SqlExecutor sqlExecutor;
+    private BaseDAO sqlExecutor;
 
-    private MySqlRunner mySqlRunner;
+    private MySqlDataInsertRunner mySqlRunner;
 
     @BeforeEach
     void init() {
         sqlBuilder = new MySqlSqlBuilder();
-        sqlExecutor = new MySqlExecutor();
-        mySqlRunner = new MySqlRunner();
+        sqlExecutor = new MySqlDAO();
+        mySqlRunner = new MySqlDataInsertRunner();
     }
 
     @Test

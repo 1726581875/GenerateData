@@ -1,4 +1,4 @@
-package zhangyu.fool.generate.service.executor;
+package zhangyu.fool.generate.service.dao;
 
 import zhangyu.fool.generate.exception.RunSqlException;
 import zhangyu.fool.generate.util.ConnectUtil;
@@ -13,7 +13,7 @@ import java.util.Date;
  * @author xiaomingzhang
  * @date 2021/8/19
  */
-public class MySqlExecutor implements SqlExecutor {
+public class MySqlDAO implements BaseDAO {
 
     private final static Set<Class<?>> supportTypeSet = new HashSet<>(Arrays.asList(String.class, Date.class));
 
@@ -131,7 +131,7 @@ public class MySqlExecutor implements SqlExecutor {
 
     public static void main(String[] args) {
         String sql = "select count(*) from fool_database";
-        MySqlExecutor mySqlExecutor = new MySqlExecutor();
+        MySqlDAO mySqlExecutor = new MySqlDAO();
         Integer count = mySqlExecutor.getOne(sql, Integer.class);
         System.out.println(count);
     }

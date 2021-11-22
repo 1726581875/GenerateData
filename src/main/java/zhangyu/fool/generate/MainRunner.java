@@ -1,7 +1,7 @@
 package zhangyu.fool.generate;
 
 import zhangyu.fool.generate.object.test.mysql.FoolTable;
-import zhangyu.fool.generate.service.runner.MySqlRunner;
+import zhangyu.fool.generate.service.runner.MySqlDataInsertRunner;
 
 /**
  * @author xiaomingzhang
@@ -10,7 +10,7 @@ import zhangyu.fool.generate.service.runner.MySqlRunner;
 public class MainRunner {
 
     public static void main(String[] args) {
-        MySqlRunner mySqlRunner = new MySqlRunner();
+        MySqlDataInsertRunner mySqlRunner = new MySqlDataInsertRunner();
         mySqlRunner.batchGenerateData(FoolTable.class, 5);
 
     }

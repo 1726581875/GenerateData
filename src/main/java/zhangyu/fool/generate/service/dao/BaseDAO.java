@@ -1,4 +1,4 @@
-package zhangyu.fool.generate.service.executor;
+package zhangyu.fool.generate.service.dao;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * @author xiaomingzhang
  * @date 2021/8/19
  */
-public interface SqlExecutor {
+public interface BaseDAO {
 
     /**
      * 执行SQL

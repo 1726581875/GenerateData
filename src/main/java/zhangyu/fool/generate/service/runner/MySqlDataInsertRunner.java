@@ -6,8 +6,8 @@ import zhangyu.fool.generate.annotation.feild.Join;
 import zhangyu.fool.generate.service.builder.MySqlSqlBuilder;
 import zhangyu.fool.generate.service.builder.SqlBuilder;
 import zhangyu.fool.generate.service.builder.model.AutoFieldRule;
-import zhangyu.fool.generate.service.executor.MySqlExecutor;
-import zhangyu.fool.generate.service.executor.SqlExecutor;
+import zhangyu.fool.generate.service.dao.MySqlDAO;
+import zhangyu.fool.generate.service.dao.BaseDAO;
 import zhangyu.fool.generate.service.runner.model.TableNode;
 
 import java.lang.reflect.Field;
@@ -19,17 +19,17 @@ import java.util.Objects;
  * @author xiaomingzhang
  * @date 2021/8/23
  */
-public class MySqlRunner {
+public class MySqlDataInsertRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(MySqlRunner.class);
+    private static final Logger log = LoggerFactory.getLogger(MySqlDataInsertRunner.class);
 
     private SqlBuilder sqlBuilder;
 
-    private SqlExecutor sqlExecutor;
+    private BaseDAO sqlExecutor;
 
-    public MySqlRunner() {
+    public MySqlDataInsertRunner() {
         sqlBuilder = new MySqlSqlBuilder();
-        sqlExecutor = new MySqlExecutor();
+        sqlExecutor = new MySqlDAO();
     }
 
 
