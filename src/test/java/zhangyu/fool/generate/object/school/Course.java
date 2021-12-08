@@ -1,8 +1,6 @@
 package zhangyu.fool.generate.object.school;
 
-import zhangyu.fool.generate.annotation.feild.Char;
-import zhangyu.fool.generate.annotation.feild.Id;
-import zhangyu.fool.generate.annotation.feild.Ignore;
+import zhangyu.fool.generate.annotation.feild.*;
 import zhangyu.fool.generate.annotation.feild.Number;
 import zhangyu.fool.generate.enums.IdType;
 import zhangyu.fool.generate.enums.RuleType;

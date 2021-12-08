@@ -11,9 +11,7 @@ import zhangyu.fool.generate.service.dao.BaseDAO;
 import zhangyu.fool.generate.service.runner.model.TableNode;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author xiaomingzhang
@@ -26,6 +24,12 @@ public class MySqlDataInsertRunner {
     private SqlBuilder sqlBuilder;
 
     private BaseDAO sqlExecutor;
+
+    /**
+     * 递归最大层数
+     */
+    private static final int RECURSION_MAX_NUM = 100;
+
 
     public MySqlDataInsertRunner() {
         sqlBuilder = new MySqlSqlBuilder();
@@ -58,7 +62,7 @@ public class MySqlDataInsertRunner {
         TableNode parentNode = new TableNode(entityClass, null, 1, rowNum, null);
         tableNodeList.add(parentNode);
         // 递归解析所有的@Join注解的列
-        doAnalyzeTableNodeTree(entityClass, parentNode, tableNodeList);
+        doAnalyzeTableNodeTree(0, entityClass, parentNode, tableNodeList);
 
         List<String> insertSqlList = new ArrayList<>(16);
         // handler and get sql
@@ -150,9 +154,23 @@ public class MySqlDataInsertRunner {
     }
 
 
-    private void doAnalyzeTableNodeTree(Class<?> entityClass, TableNode parentNode, List<TableNode> joinList) {
+    /**
+     *
+     * @param recursionNum 递归层数,防止死循环递归
+     * @param entityClass 解析类的class
+     * @param parentNode 父节点
+     * @param joinList 解析出来的所有要生成数据的表节点对象List
+     */
+    private void doAnalyzeTableNodeTree(int recursionNum, Class<?> entityClass, TableNode parentNode, List<TableNode> joinList) {
         Field[] fields = entityClass.getDeclaredFields();
         List<TableNode> childrenNode = new ArrayList<>();
+
+        // 检查是超出最大递归次数，如果出现可能出现死循环
+        if (recursionNum++ > RECURSION_MAX_NUM) {
+            throw new RuntimeException("递归次数超过" + RECURSION_MAX_NUM + "，请检查各节点的@Join注解对象间是否存在互相引用或者成环引用");
+        }
+        System.out.println(recursionNum);
+
         for (Field field : fields) {
             Join join = field.getAnnotation(Join.class);
             if (Objects.nonNull(join)) {
@@ -163,7 +181,7 @@ public class MySqlDataInsertRunner {
                 childrenNode.add(joinTreeNode);
                 joinList.add(joinTreeNode);
                 // 递归解析
-                doAnalyzeTableNodeTree(join.object(), joinTreeNode, joinList);
+                doAnalyzeTableNodeTree(recursionNum, join.object(), joinTreeNode, joinList);
             }
         }
         parentNode.setChildrenNode(childrenNode);
