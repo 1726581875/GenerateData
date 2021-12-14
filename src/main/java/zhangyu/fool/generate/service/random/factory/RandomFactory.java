@@ -117,7 +117,7 @@ public class RandomFactory {
     public static Object getRandomValueType(Field field) {
         FoolRandom random = getRandomByType(field.getType());
         if (random == null) {
-            throw new RuntimeException("获取不到类型" + field.getType().getName() + "对应random类");
+            throw new RuntimeException("获取不到类型" + field.getType().getName() + "对应random类,不支持该类型的数据生成");
         }
         return random.randomValue(field);
     }

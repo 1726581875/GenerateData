@@ -169,7 +169,6 @@ public class MySqlDataInsertRunner {
         if (recursionNum++ > RECURSION_MAX_NUM) {
             throw new RuntimeException("递归次数超过" + RECURSION_MAX_NUM + "，请检查各节点的@Join注解对象间是否存在互相引用或者成环引用");
         }
-        System.out.println(recursionNum);
 
         for (Field field : fields) {
             Join join = field.getAnnotation(Join.class);

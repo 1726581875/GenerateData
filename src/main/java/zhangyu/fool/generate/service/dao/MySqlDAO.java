@@ -110,7 +110,7 @@ public class MySqlDAO implements BaseDAO {
      * @param clazz
      * @return
      */
-    private static boolean isMappingSupportType(Class clazz) {
+    public static boolean isMappingSupportType(Class clazz) {
         return isBaseType(clazz) || supportTypeSet.contains(clazz);
     }
 

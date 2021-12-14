@@ -6,6 +6,7 @@ import zhangyu.fool.generate.annotation.feild.Ignore;
 import zhangyu.fool.generate.object.test.mysql.FoolDatabase;
 import zhangyu.fool.generate.service.builder.model.AutoFieldRule;
 import zhangyu.fool.generate.enums.IdType;
+import zhangyu.fool.generate.service.dao.MySqlDAO;
 import zhangyu.fool.generate.service.random.factory.RandomFactory;
 import zhangyu.fool.generate.util.NameUtil;
 
@@ -106,23 +107,31 @@ public class MySqlSqlBuilder implements SqlBuilder {
         Field[] fields = entityClass.getDeclaredFields();
         List<Field> fieldList = new ArrayList<>(fields.length);
         for (Field field : fields) {
-            //过滤掉带有Ignore注解的列
+            // 1、过滤掉带有Ignore注解的列
             if (field.getAnnotation(Ignore.class) != null) {
                 continue;
             }
+            // 2、如果标记了@Id注解，说明是主键
             if (field.getAnnotation(Id.class) != null) {
                 Id annotation = field.getAnnotation(Id.class);
-                //主键是否交由数据库生成
+                // 主键是否交由数据库生成
                 if (IdType.AUTH.equals(annotation.value())) {
+                    // 无规则id生成，表明交由数据库生成，不拼接该列
                     if((ruleList == null || ruleList.size() == 0)){
                         continue;
                     }
+                    // id规则里不包含该列，表面也可以continue，不拼接该列，交由数据库自增
                     Set<String> fieldSet = ruleList.stream().map(AutoFieldRule::getName).collect(Collectors.toSet());
                     if(!fieldSet.contains(field.getName())){
                         continue;
                     }
                 }
             }
+            // 3.非数据库映射支持类型，也不做处理
+            if(!MySqlDAO.isMappingSupportType(field.getType())){
+                continue;
+            }
+
             fieldList.add(field);
         }
         return fieldList;
