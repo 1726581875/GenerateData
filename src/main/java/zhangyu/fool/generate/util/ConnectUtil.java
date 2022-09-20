@@ -15,6 +15,10 @@ public class ConnectUtil {
 
     public static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
     public static final String H2_DRIVER = "org.h2.Driver";
+    /**
+     * 达梦数据库连接驱动
+     */
+    public static final String DM_DRIVER = "dm.jdbc.driver.DmDriver";
 
     static {
         // 获取到xml文件里配置的连接参数
@@ -45,8 +49,12 @@ public class ConnectUtil {
         }
     }
 
-    public static void setConfig(Config connConfig){
+    public synchronized static void setConfig(Config connConfig){
         config = connConfig;
+    }
+
+    public static Config getConfig(){
+       return config;
     }
 
 

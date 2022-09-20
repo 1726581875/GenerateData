@@ -71,7 +71,13 @@ public class MySqlDataInsertRunner {
         }
 
         // run sql
-        insertSqlList.forEach(sqlExecutor::execute);
+        long beginTime = System.currentTimeMillis();
+        for(int i = 0; i < insertSqlList.size(); i++) {
+            log.debug("=====  分隔线 入库 ,当前批次num={},total={}  =====", i,  insertSqlList.size());
+            //sqlExecutor.execute(insertSqlList.get(i));
+            log.debug("=====  分隔线 入库 ,当前批次num={},total={}  =====", i,  insertSqlList.size());
+        }
+        log.debug("=====  分隔线 total={}，入库总耗时={}s =====", insertSqlList.size(), (System.currentTimeMillis() - beginTime) / 1000);
 
     }
 
@@ -103,15 +109,18 @@ public class MySqlDataInsertRunner {
         long beginTime = System.currentTimeMillis();
 
         for (int i = 1; i <= pageNum; i++) {
+
+            log.debug("=====  分隔线 构造sql ,当前批次num={},total={}  =====", i, pageNum);
             int limit = i == pageNum ? rowNum - pageSize * (pageNum - 1) : pageSize;
             //构造SQL
             String sql = autoFieldRules == null ? sqlBuilder.buildInsertSql(entityClass, limit)
                     : sqlBuilder.buildInsertSql(entityClass, autoFieldRules, limit);
-            log.debug("build sql: {}", sql);
-            log.debug("=====  分隔线  =====");
-            sqlList.add(sql);
+            //log.debug("build sql: {}", sql);
+            log.debug("=====  分隔线 构造sql ,当前批次num={},total={}  =====",i, pageNum);
+            //sqlList.add(sql);
+            sqlExecutor.execute(sql);
         }
-        log.debug("构造SQL耗时={}ms，数量={}", (System.currentTimeMillis() - beginTime), rowNum);
+        log.debug("构造SQL耗时={}s，数量={}", (System.currentTimeMillis() - beginTime) / 1000, rowNum);
         return sqlList;
     }
 

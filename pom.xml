@@ -117,8 +117,32 @@
             <version>1.7.25</version>
         </dependency>
 
+        <!-- HikariCP连接池 -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>4.0.3</version>
+        </dependency>
 
+<!--        <dependency>
+            <groupId>com.dm</groupId>
+            <artifactId>Dm7JdbcDriver</artifactId>
+            <version>1.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/lib/Dm7JdbcDriver18.jar</systemPath>
+        </dependency>-->
 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.2</version>
+        </dependency>
     </dependencies>
 
 

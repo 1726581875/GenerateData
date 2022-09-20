@@ -33,5 +33,8 @@ public interface BaseDAO {
     <T> T getOne(String sql, Class<T> type);
 
 
+    <T> void createTableIfNotExist(Class<T> entity);
+
+
 
 }
